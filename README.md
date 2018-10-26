@@ -1,251 +1,175 @@
-# Generic Mapping Tools
 
-[![TravisCI](http://img.shields.io/travis/GenericMappingTools/gmt/master.svg?style=flat-square&label=TravisCI)](https://travis-ci.org/GenericMappingTools/gmt)
-[![Coverity](https://scan.coverity.com/projects/7153/badge.svg)](https://scan.coverity.com/projects/gmt)
+![Win 10 & Ubuntu](https://upload-images.jianshu.io/upload_images/7316098-078cce35741f35e1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-## What is GMT?
+> GMT安装方法有好几种：（1）从官方发布的二进制文件安装；（2）在Mac, Linux系统下有自动安装命令；（3）从源码编译安装。第三种方法有利于体验最新版(开发版)的新功能，因为官方发布的稳定版本往往会比开发版晚很多！方便进行同步更新；有利于二次开发，加入自己的功能或者做一定的修改！本帖一步一步说明如何在Ubuntu系统下从源码安装GMT，对于win 10用户，[需要开启subsystem](https://www.jianshu.com/p/334dcca006f7)！
 
-GMT is an open source collection of about 80 command-line tools for manipulating 
-geographic and Cartesian data sets (including filtering, trend fitting, gridding, 
-projecting, etc.) and producing PostScript illustrations ranging from simple x–y 
-plots via contour maps to artificially illuminated surfaces and 3D perspective 
-views. The GMT supplements add another 40 more specialized and discipline-specific 
-tools. GMT supports over 30 map projections and transformations and requires 
-support data such as [GSHHG](http://www.soest.hawaii.edu/pwessel/gshhg/) 
-coastlines, rivers, and political boundaries and optionally 
-[DCW](http://www.soest.hawaii.edu/pwessel/dcw) country polygons. 
 
-GMT is developed and maintained by Paul Wessel, Walter H. F. Smith, Remko Scharroo, 
-Joaquim Luis and Florian Wobbe, with help from a global set of 
-[contributors](http://gmt.soest.hawaii.edu/projects/gmt/wiki/Volunteers) and 
-support by the [National Science Foundation](http://www.nsf.gov/). 
-It is released under the 
-[GNU Lesser General Public License](http://www.gnu.org/licenses/lgpl.html) 
-version 3 or any later version.
+根据gmt[官方说明](https://github.com/GenericMappingTools/gmt)首先安装所需的库
 
-## The GMT World Domination
+# 编译工具
+编译工具包括gcc, g++, gfortran, make, cmake。首先在终端查看诸工具是否已经安装：比如`gcc --version`，如果没有安装或者不够新，可使用自动安装命令安装之，比如: `sudo apt-get install g++`。
 
-Considering its flexibility at no charge, people worldwide are using GMT in their 
-work and at home. Most users of GMT are Earth, ocean or planetary scientists, but 
-there are apparently no limits to the kind of applications that may benefit from 
-GMT. We know GMT is used in medical research, engineering, physics, mathematics, 
-social and biological sciences, and by geographers, fisheries institutes, oil 
-companies, a wide range of government agencies, and last but not least innumerable 
-hobbyists.
+> 但是CMake貌似不能用apt-get安装，下面给出从源码安装最新版cmake的方法
 
-![Map of GMT downloads](http://gmt.soest.hawaii.edu/gmt/map_geoip_all.png)
+## [cmake](https://cmake.org/download/)
+1. [下载](https://cmake.org/files/v3.13/cmake-3.13.0-rc1.tar.gz)
+2. 解压：`tar -zxvf cmake-3.13.0-rc1.tar.gz `
+3. 配置：`make build `,  `cd build`, `../configure --prefix=/usr/local`
+4. `make`
+5. `make install`
 
-The map above illustrates the spreading of the current GMT release around the world 
-based on web traffic. Each colored circle in the map above represents a 15x15 arc 
-minute block with one or more users who downloaded GMT. Download geolocation is based 
-on [MaxMind's](http://www.maxmind.com/) freely available GeoLite data.
+# 安装GMT依赖库
 
-## A reminder
+## [netcdf](https://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-4.6.1.tar.gz)
+ [github仓库](http://github.com/Unidata/netcdf-c)
+### netCDF依赖库
+#### m4
+安装 `sudo apt-get install m4`
 
-If you think it is appropriate, you may consider paying us back by including
-our latest EOS article in the reference list of your future publications that 
-will benefit from the availability of GMT:
+#### [HDF5](https://support.hdfgroup.org/HDF5/release/obtainsrc518.html#conf)
+1. [下载](https://support.hdfgroup.org/ftp/HDF5/current18/src/hdf5-1.8.20.tar)
+2. 解压：`tar xvf hdf5-1.8.20.tar`
+3. configure：`mkdir build` `cd build` `../configure --prefix=/usr/local`
+4. `make `
+... 等待 ....
+5. `make install` or `sudo make install`
 
-> Wessel, P., W. H. F. Smith, R. Scharroo, J. F. Luis, and F. Wobbe (2013), 
-> Generic Mapping Tools: Improved version released, Eos Trans. AGU, 94(45), 
-> 409-410, doi:[10.1002/2013EO450001](https://doi.org/10.1002/2013EO450001)
+### [curl](https://curl.haxx.se/download.html)
 
-## Introduction
+> 因为编译netcdf需要用到curl的源码，我喜欢从源码安装。如果后面make netcdf的时候出现错误，可以尝试将从apt-get安装的curl卸载掉：`sudo apt-get autoremove curl`
 
-You do not need to read these instructions unless you plan to build and
-install the programs manually.
+1. [下载](https://curl.haxx.se/download/curl-7.61.1.tar.gz)
+2. 解压：`tar -zxvf curl-7.61.1.tar.gz`
+2. config: `mkdir build`  `cd build`  `../configure --prefix=/usr/local`
+2. make: `make`
+2. install: `make install`
 
-GMT has been installed successfully under UNIX/Linux/OS X on workstations.  It
-also installs under Windows and in UNIX emulators such as Cygwin or on virtual
-machines.  We anticipate few problems if you are installing the package on
-other platforms.
+> 此时如果再不提示缺什么库的话，应该会顺利通过。如果缺什么库，编译过程中会提示缺什么，继续安装所缺库即可
 
-Note there are three GMT tar archives available (#3 is optional):
+### 安装netCDF
+1. 解压： `tar -zxvf netcdf-4.6.1.tar.gz`
+1. `mkdir build` `mkdir bin`
+1. `cd build`
+1. `../configure --prefix=/usr/local` 或者其他的什么你想安装到的目录
+1. `make`
+... 等待 ...
+1. `make install`
 
-1. gmt-6.x.x.tar.bz2:          The GMT 6 distribution
-2. gshhg-gmt-2.x.x.tar.gz:     All five resolutions of GSHHG coastline data
-3. dcw-gmt-1.x.x.tar.bz2:      Digital Chart of the World polygon data
 
-The archives are available in bzip2 (\*.bz2) and gzip (\*.gz) formats.
-If you do not have bzip2 installed you can obtain source or executables
-from http://www.bzip.org.
+## [GDAL](https://www.gdal.org/index.html)
 
-For Windows users there are separate Windows installers available; this
-discussion only considers UNIX/Linux/OS X installations. Windows users who
-which to build GMT from the sources refer to README.WIN32.
+1. [下载](http://download.osgeo.org/gdal/2.3.2/gdal-2.3.2.tar.gz)
+2. 解压：`tar -zxvf gdal-2.3.2.tar.gz`
+2. config: `cd gdal-2.3.2`  `../configure --prefix=/usr/local` **注意**：直接在主目录下面配置和make，不要创建build目录，不然会出现没有make目标的错误。
+2. make: `make`
+此过程等待时间非常长....
+2. install: `make install`
 
-## Note to package maintainers
+## [PCRE](https://www.pcre.org/)
+1. [下载](ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.42.tar.gz)
+2. 解压：`tar -zxvf pcre-8.42.tar.gz`
+2. config: `mkdir build`  `cd build`  `../configure --prefix=/usr/local`
+2. make: `make`
+2. install: `make install`
 
-Package maintainers note packaging recommendations at
-http://gmt.soest.hawaii.edu/projects/gmt/wiki/PackagingGMT
+> 出现了几个警告：`libtool: warning: relinking 'libpcreposix.la'`, `libtool: warning: relinking 'libpcrecpp.la'`先不管
 
-## Build and runtime prerequisites
+## [BLAS](http://www.netlib.org/blas/)
+1. [下载](http://www.netlib.org/blas/blas-3.8.0.tgz)
+2. 解压：`tar -zxvf blas-3.8.0.tgz`
+3. 编译生成libblas.so：`gfortran -shared -O2 *.f -o libblas.so -fPIC`
+4. 添加环境变量到`~/.zshrc`: `export LIBPATH=/mnt/d/Research/gmt/library/BLAS-3.8.0/libblas.so:$LIBPATH`
 
-- Software:
-  You need Ghostscript, CMake (>=2.8.5), netCDF (>=4.0, netCDF-4/HDF5
-  support mandatory).  Optionally install Sphinx, PCRE1 or PCRE2, GDAL, LAPACK,
-  BLAS and FFTW (single precision version).
-- Data:
-  You need gshhg (>=2.2.2); optionally install dcw-gmt (>=1.0.5)
-
-### CMake
-
-Install CMake (>=2.8.5) from http://www.cmake.org/cmake/resources/software.html
-
-### Install netCDF library
-
-For all major Linux distributions there are prepackaged development binaries
-available. netCDF is also available on MacOSX trough the macports and fink
-package managers.
-
-Otherwise, get netCDF from http://www.unidata.ucar.edu/downloads/netcdf/.
-You need at least version 4.0 with netCDF-4/HDF5 data model support (do not
-disable HDF5/ZLIB in netCDF with --disable-netcdf-4).
-
-### Install CURL library
-
-To handle URLs we depend on libcurl so install via your favorite package
-manager if it is not intrinsic to your Unix installation.  Otherwise, get
-it from https://curl.haxx.se.
-
-### GDAL (optional)
-
-To use the GDAL interface (ability to provide grids or images to be imported
-via gdal) you must have the GDAL library and include files installed.  Like
-netCDF, GDAL is available through your favorite package manager on many *NIX
-systems.
-
-### PCRE (optional)
-
-To use the PCRE interface (ability to specify regular expressions in some
-search options, e.g., gmtconvert) you must have the PCRE library and include
-files installed.  PCRE is available through your favorite package manager
-on many *NIX systems.
-
-Because GDAL already links with PCRE1 it is most practical to use that version.
-But if you insist, GMT can also be compiled with PCRE2.
-
-### LAPACK (optional)
-
-To greatly speed up some linear algebra calculations (greenspline in
-particular) you must have the LAPACK library and include files installed.
-LAPACK is available through your favorite package manager on many *NIX
-systems or in the case of OS X is built in.  Normally this also installs
-BLAS but if not you need to do that separately as we are using some
-cblas_* functions to do linear algebra calculations.
-
-### Install support data
-
-You can obtain GMT from http://gmt.soest.hawaii.edu/. Alternatively you may
-get GMT from any of the following FTP sites. Try the site that is closest to
-you to minimize transmission times:
-
-| Site                                                        | FTP address             |
-|:------------------------------------------------------------|:------------------------|
-| SOEST, U. of Hawaii                                         | ftp.soest.hawaii.edu    |
-| Lab for Satellite Altimetry, NOAA                           | ibis.grdl.noaa.gov      |
-| IRIS, Washington, US                                        | ftp.iris.washington.edu |
-| IAG-USP, U. of Sao Paulo, BRAZIL                            | ftp.iag.usp.br          |
-| ISV, Hokkaido U, Sapporo, JAPAN                             | ftp.eos.hokudai.ac.jp   |
-| GDS, Vienna U. of Technology, AUSTRIA                       | gd.tuwien.ac.at         |
-| TENET, Tertiary Education & Research Networks, SOUTH AFRICA | gmt.mirror.ac.za        |
-
-The development sources are available from GitHub at 
-https://github.com/GenericMappingTools/gmt.
-
-Extract the files and put them in a separate directory (need not be
-where you eventually want to install GMT).
-
-## Building GMT (quick start)
-
-This is just a quick start description. For a more thorough description read more on [Building GMT with
-CMake](Building_GMT_with_CMake.md)
-
-Checkout GMT from its GitHub repository:
-
+## [LAPACK](http://www.netlib.org/lapack/#_lapack_version_3_1)
+1. [下载](http://www.netlib.org/lapack/lapack-3.8.0.tar.gz)
+2. 解压：`tar -zxvf lapack-3.8.0.tar.gz`
+2. 拷贝make.inc：`cp make.inc.example make.inc`
+3. 添加` -fPIC`到`OPTS`和`NOOPT`
+```bash
+OPTS    = -O2 -frecursive fPIC
+DRVOPTS = $(OPTS)
+NOOPT   = -O0 -frecursive fPIC
 ```
-git clone https://github.com/GenericMappingTools/gmt
-cd gmt
-cp cmake/ConfigUserTemplate.cmake cmake/ConfigUser.cmake
+4. 修改lib名称
+```bash
+BLASLIB = ../../librefblas.so
+LAPACKLIB = liblapack.so
 ```
-
-Edit *cmake/ConfigUser.cmake* [see comments in the file]. Then:
-
+5. 修改SRC/makefile
+将
+```bash
+../$(LAPACKLIB): $(ALLOBJ)
+	$(ARCH) $(ARCHFLAGS) $@ $(ALLOBJ)
+	$(RANLIB) $@
 ```
+改为
+```bash
+../$(LAPACKLIB): $(ALLOBJ)
+    $(LOADER) $(LOADOPTS) -shared -Wl,-soname,liblapack.so -o $@ $(ALLOBJ) ../librefblas.so
+```
+6. 修改BLAS/SRC/Makefile
+将
+```bash
+$(BLASLIB): $(ALLOBJ)
+	$(ARCH) $(ARCHFLAGS) $@ $(ALLOBJ)
+	$(RANLIB) $@
+```
+改为
+```bash
+$(BLASLIB): $(ALLOBJ)
+	$(LOADER) $(LOADOPTS) -z muldefs -shared -Wl,-soname,librefblas.so -o $@ $(ALLOBJ)
+```
+> 如果你没有g77编译器，请将第2步拷贝的make.inc文件中的两个`g77`更换为你的fortran编译器比如`gfortran`
+
+7. make
+```
+make blaslib
+make lapacklib
+```
+8. 添加环境变量： `export LIBPATH=/mnt/d/Research/gmt/library/BLAS-3.8.0/libblas.so:/mnt/d/Research/gmt/library/lapack-3.8.0/liblapack.so:$LIBPATH`
+
+
+## 安装OpenMP库
+`sudo apt-get install libomp-dev`
+
+## [FFTW](https://github.com/FFTW/fftw3)
+1. [下载](http://fftw.org/fftw-3.3.8.tar.gz)
+2. 解压：`tar -zxvf fftw-3.3.8.tar.gz`
+3. 配置：`make build `,  `cd build`, `../configure --prefix=/usr/local`
+4. `make`
+5. `make install`
+
+## Ghostscript
+`sudo apt-get update`
+` sudo apt-get install ghostscript`
+
+## 配置数据
+下载
+1. [GSHHG](ftp://ftp.soest.hawaii.edu/gshhg/gshhg-gmt-2.3.7.tar.gz)
+2. [DCW-GMT](ftp://ftp.soest.hawaii.edu/dcw/dcw-gmt-1.1.4.zip)
+
+设置路径: 环境变量
+1. `GSHHG_PATH`
+2. `DCW_PATH`
+
+
+# 编译gmt
+```bash
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
 make -j
 ```
 
-where _x_ is the number of threads you want to use and depends on the number
-of cores in your CPU and if hyperthreading is available or not.
-cmake will build out-of-source in the the directory _build_. 'CMAKE_BUILD_TYPE'
-can be one of: empty, Debug, Release, RelWithDebInfo or MinSizeRel
+# 保持与官方仓库同步更新(针对二次开发者)
+1. 查看目前的远程仓库地址：`git remote -v`
+3. 添加官方仓库：`git remote add upstream https://github.com/GenericMappingTools/gmt.git`
+其中**upstream**是官方仓库，**orgin**是你fock之后存在你自己的github账户里的仓库
+4. 拉取官方仓库更新：`git fetch upstream`
+5. 切换到自己的分支，比如master：`git checkout master`
+6. 与官方更新合并：`git merge upstream/master`
+7. 修改远程push仓库地址：`git remote set-url origin xxxx.git`
+8. 删除远程仓库地址:`git remote rm origin`
 
-```
-make -j install
-```
-
-installs a basic gmt in _build/gmt_.
-
-NOTE: All cmake command line options such as _-DCMAKE\_INSTALL\_PREFIX_ can be
-configured in *cmake/ConfigUser.cmake*.
-
-### Set path
-
-Make sure users set their PATH to include the directory containing
-the GMT executables (BINDIR) if this is not a standard directory
-like /usr/local/bin.  You should now be able to run GMT programs.
-
-## GMT supplemental Code
-
-GMT users elsewhere have developed programs that utilize the GMT libraries and
-produce PostScript code compatible with the rest of GMT or simply perform data
-manipulation.  In addition, misc.  code developed by us depend on GMT
-libraries.  Currently, the supplemental archive include the directories:
-
-  gshhg     - Data extractor for GSHHG shoreline polygons and rivers, borders.
-  img       - Data extractor for Smith/Sandwell altimetry grids.
-  meca      - Plotting of focal mechanisms, velocity arrows,
-              and error ellipses on maps.
-  mgd77     - Programs for handling of native MGD77 files.
-  misc      - dimfilter
-  potential - geopotential manipulations
-  segyprogs - Plotting SEGY seismic data sets.
-  spotter   - Plate tectonic & kinematics applications.
-  x2sys     - Track intersection (crossover) tools.
-
-## Misc
-
-Before running programs, there are a few things you should do/know:
-
-  - Read carefully the documentation for the gmt system.  This can be
-    found as both PDF and HTML files in the doc/pdf|html directories.
-    The successful operation of gmt-programs depends directly on your
-    understanding of how gmt "works", its option lists, I/O, and composite
-    plot mechanisms.  Then, before running individual gmt programs, read
-    the associated man page.
-
-## Software support
-
-You haven't bought anything so you cannot expect full service.  However, if
-you find a bug in any of the programs, please report it to us
-(http://gmt.soest.hawaii.edu/) rather than trying to fix it yourself so that
-we, and through us, other users may benefit from your find.  Make sure you
-provide us with enough information so that we can recreate the problem.
-
-In addition to the bug tracking feature (New Issues) on the website, you
-can also post general questions on the GMT user forum.  Note that registration
-is required to post on the site.
-
-## Ordering the GMT package on CD/DVD-Rs
-
-Should you or someone you know without net-access need to obtain GMT:
-Geoware makes and distributes CD/DVD-Rs with the GMT package and many
-useful data sets.  For more details and a full description of the data
-sets (up to 60 Gb of data!) visit http://www.geoware-online.com/.
-
-Good luck!
-
-The GMT Team.
+> 如果发现在终端不能直接用`gmt`命令，每次在终端输入gmt会出现这个错误：`fatal: Not a git repository (or any of the parent directories): .git`，那是因为安装了git的插件的原因。一般这个是由于on my zsh引起的，gmt这个词被定义为了 **alias g./home/zguo/.oh-my-zsh/plugins/git/git**，定义的文件为:`/home/zguo/.oh-my-zsh/plugins/git/git.plugin.zsh`，找到这个文件打开之后把这一行注释掉，然后重新source一下或者重新打开一下终端就好了。
+**Mac系统下也是一样的操作！**
