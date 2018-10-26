@@ -47,7 +47,7 @@
  *	gmt_linearx_grid 	 : Draw linear x grid lines
  *	gmt_setfill              :
  *	gmt_setfont              :
- *	gmt_draw_map_inset      :
+ *	gmt_draw_map_insert      :
  *	gmt_setpen               :
  *	gmt_draw_custom_symbol   :
  *	gmt_add_label_record     :
@@ -4763,7 +4763,7 @@ unsigned int gmt_setfont (struct GMT_CTRL *GMT, struct GMT_FONT *F) {
 	return (outline);
 }
 
-void gmt_draw_map_inset (struct GMT_CTRL *GMT, struct GMT_MAP_INSET *B) {
+void gmt_draw_map_insert (struct GMT_CTRL *GMT, struct GMT_MAP_INSERT *B) {
 	/* Place a rectangle on the map, as defined by center point and dimensions or w/e/s/n in geo or projected coordinates */
 	unsigned int k;
 	double rect[4], dim[3], s;
@@ -4807,7 +4807,7 @@ void gmt_draw_map_inset (struct GMT_CTRL *GMT, struct GMT_MAP_INSET *B) {
 			gmt_geo_to_xy (GMT, B->wesn[XLO], B->wesn[YLO], &rect[XLO], &rect[YLO]);	/* Lower left corner in inches */
 			gmt_geo_to_xy (GMT, B->wesn[XHI], B->wesn[YHI], &rect[XHI], &rect[YHI]);	/* Lower left corner in inches */
 		}
-		else {	/* Curved map inset */
+		else {	/* Curved map insert */
 			uint64_t np;
 			int outline;
 			double *lon = NULL, *lat = NULL;
@@ -4824,13 +4824,13 @@ void gmt_draw_map_inset (struct GMT_CTRL *GMT, struct GMT_MAP_INSET *B) {
 		}
 	}
 
-	/* Deal with rectangular inset */
+	/* Deal with rectangular insert */
 	/* Determine panel dimensions */
 
 	dim[GMT_X] = rect[XHI] - rect[XLO];	dim[GMT_Y] = rect[YHI] - rect[YLO];
 	/* Report position and dimensions */
 	s = GMT->session.u2u[GMT_INCH][GMT->current.setting.proj_length_unit];
-	GMT_Report (GMT->parent, GMT_MSG_LONG_VERBOSE, "Map inset lower left corner and dimensions (in %s): %g %g %g %g\n",
+	GMT_Report (GMT->parent, GMT_MSG_LONG_VERBOSE, "Map insert lower left corner and dimensions (in %s): %g %g %g %g\n",
 		GMT->session.unit_name[GMT->current.setting.proj_length_unit], rect[XLO]*s, rect[YLO]*s, dim[GMT_X]*s, dim[GMT_Y]*s);
 	if (B->file) {	/* Save x0 y0 w h to file */
 		FILE *fp = fopen (B->file, "w");
@@ -4844,7 +4844,7 @@ void gmt_draw_map_inset (struct GMT_CTRL *GMT, struct GMT_MAP_INSET *B) {
 	}
 	if (panel) {	/* Requested to draw a panel */
 		panel->width = dim[GMT_X];	panel->height = dim[GMT_Y];
-		if (!panel->clearance) gmt_M_memset (panel->padding, 4, double);	/* No clearance is default for map insets unless actually specified */
+		if (!panel->clearance) gmt_M_memset (panel->padding, 4, double);	/* No clearance is default for map inserts unless actually specified */
 		gmt_draw_map_panel (GMT, 0.5 * (rect[XHI] + rect[XLO]), 0.5 * (rect[YHI] + rect[YLO]), 3U, panel);
 	}
 	if (B->translate)	/* Translate the plot origin */
@@ -7439,9 +7439,10 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 	 *        To reset to normal printing, use -1.
 	 * level: Level of X, Y, or Z in projected coordinates (inch).
 	 */
+
 	double a, b, c, d, e, f;
 	struct PSL_CTRL *PSL= GMT->PSL;
-
+	// printf("调试gmt_plot-郭志馗\n");
 	/* Only do this in 3D mode */
 	if (!GMT->current.proj.three_D) return;
 
@@ -7453,13 +7454,12 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 
 	/* Store value of level (store plane at end) */
 	GMT->current.proj.z_project.level = level;
-
 	/* Concat contains the proper derivatives of these functions:
 	x_out = - x * GMT->current.proj.z_project.cos_az + y * GMT->current.proj.z_project.sin_az + GMT->current.proj.z_project.x_off;
 	y_out = - (x * GMT->current.proj.z_project.sin_az + y * GMT->current.proj.z_project.cos_az) *
 		GMT->current.proj.z_project.sin_el + z * GMT->current.proj.z_project.cos_el + GMT->current.proj.z_project.y_off;
 	*/
-
+	FILE* fp=NULL;
 	a = b = c = d = e = f = 0.0;
 	if (plane < 0)			/* Reset to original matrix */
 		PSL_command (PSL, "PSL_GPP setmatrix\n");
@@ -7473,6 +7473,17 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 				d = GMT->current.proj.z_project.cos_el;
 				e = GMT->current.proj.z_project.x_off - level * GMT->current.proj.z_project.cos_az;
 				f = GMT->current.proj.z_project.y_off - level * GMT->current.proj.z_project.sin_az * GMT->current.proj.z_project.sin_el;
+				// printf("YZ平面: xoff: %f   yoff: %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
+				
+				fp=fopen("tmp.txt","r");
+				if(!fp)
+				{
+					printf("读取缓存文件失败\n");
+				}else{
+					fscanf(fp,"%lf %lf",&e,&f);
+					fclose(fp);
+				}
+				printf("YZ平面 a: %f b: %f c: %f d: %f e: %f  f: %f\n",a,b,c,d,e*PSL->internal.x2ix,f*PSL->internal.y2iy);
 				break;
 			case GMT_Y:	/* Constant y. Convert x,z to x',y' */
 				a = -GMT->current.proj.z_project.cos_az;
@@ -7481,6 +7492,17 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 				d = GMT->current.proj.z_project.cos_el;
 				e = GMT->current.proj.z_project.x_off + level * GMT->current.proj.z_project.sin_az;
 				f = GMT->current.proj.z_project.y_off - level * GMT->current.proj.z_project.cos_az * GMT->current.proj.z_project.sin_el;
+				// printf("XZ平面: xoff: %f   yoff: %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
+				// FILE* fp=NULL;
+				fp=fopen("tmp.txt","r");
+				if(!fp)
+				{
+					printf("读取缓存文件失败\n");
+				}else{
+					fscanf(fp,"%lf %lf",&e,&f);
+					fclose(fp);
+				}
+				printf("XZ平面 a: %f b: %f c: %f d: %f e: %f  f: %f\n",a,b,c,d,e*PSL->internal.x2ix,f*PSL->internal.y2iy);
 				break;
 			case GMT_Z:	/* Constant z. Convert x,y to x',y' */
 				a = -GMT->current.proj.z_project.cos_az;
@@ -7489,9 +7511,20 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 				d = -GMT->current.proj.z_project.cos_az * GMT->current.proj.z_project.sin_el;
 				e = GMT->current.proj.z_project.x_off;
 				f = GMT->current.proj.z_project.y_off + level * GMT->current.proj.z_project.cos_el;
+				printf("XY平面  a: %f b: %f c: %f d: %f e: %f  f: %f\n",a,b,c,d,e*PSL->internal.x2ix,f*PSL->internal.y2iy);
+				// FILE* fp=NULL;
+				fp=fopen("tmp.txt","w");
+				if(!fp)
+				{
+					printf("打开缓存文件失败\n");
+				}else
+				{
+					fprintf(fp,"%lf %lf",e,f);
+					fclose(fp);
+				}
 				break;
 		}
-
+		printf("ix: %f iy: %f\n",PSL->internal.x2ix,PSL->internal.y2iy);
 		/* First restore the old matrix or save the old one when that was not done before */
 		PSL_command (PSL, "%s [%g %g %g %g %g %g] concat\n",
 			(GMT->current.proj.z_project.plane >= 0) ? "PSL_GPP setmatrix" : "/PSL_GPP matrix currentmatrix def",
