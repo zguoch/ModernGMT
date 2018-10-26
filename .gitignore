@@ -9,3 +9,6 @@ cmake/ConfigUser.cmake
 share/coast
 share/dcw
 **/gmt.history
+
+lib_require
+data
