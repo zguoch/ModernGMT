@@ -6596,7 +6596,7 @@ bool gmt_getinc (struct GMT_CTRL *GMT, char *line, double inc[]) {
 
 	int n;
 
-	/* Syntax: -I<xinc>[m|s|e|f|k|M|n|u|+|=][/<yinc>][m|s|e|f|k|M|n|u|+|=]
+	/* Syntax: -I<xinc>[m|s|e|f|k|M|n|u|+e|n][/<yinc>][m|s|e|f|k|M|n|u|+e|n]
 	 * Units: d = arc degrees
 	 * 	  m = arc minutes
 	 *	  s = arc seconds [was c]
@@ -6606,8 +6606,8 @@ bool gmt_getinc (struct GMT_CTRL *GMT, char *line, double inc[]) {
 	 *	  k = km [Convert to degrees]
 	 *	  n = nautical miles [Convert to degrees]
 	 *	  u = survey feet [Convert to degrees]
-	 * Flags: = = Adjust -R to fit exact -I [Default modifies -I to fit -R]
-	 *	  + = incs are actually n_columns/n_rows - convert to get xinc/yinc
+	 * Flags: +e = Adjust -R to fit exact -I [Default modifies -I to fit -R]
+	 *	  +n = incs are actually n_columns/n_rows - convert to get xinc/yinc
 	 */
 
 	if (!line) { GMT_Report (GMT->parent, GMT_MSG_NORMAL, "No argument given to gmt_getinc\n"); return (true); }
@@ -9963,6 +9963,35 @@ char * gmt_make_filename (struct GMT_CTRL *GMT, char *template, unsigned int fmt
 	return (strdup (file));
 }
 
+
+/* Function to split a floating point into nearest fraction, with maxden the largest allowable denominator.
+ * Borrowed from https://www.ics.uci.edu/~eppstein/numth/frap.c */
+
+GMT_LOCAL void make_fraction (struct GMT_CTRL *GMT, double x0, int maxden, int *n, int *d) {
+	uint64_t m[2][2], ai;
+	double x = x0, e;
+	/* initialize matrix */
+	m[0][0] = m[1][1] = 1, m[0][1] = m[1][0] = 0;
+
+	/* loop finding terms until denom gets too big */
+	while (m[1][0] *  ( ai = (uint64_t)x ) + m[1][1] <= (uint64_t)maxden) {
+		uint64_t t = m[0][0] * ai + m[0][1];
+		m[0][1] = m[0][0];
+		m[0][0] = t;
+		t = m[1][0] * ai + m[1][1];
+		m[1][1] = m[1][0];
+		m[1][0] = t;
+		if (x == (double)ai) break;     // AF: division by zero
+		x = 1 / (x - (double) ai);
+		if (x > (double)0x7FFFFFFF) break;  // AF: representation failure
+ 	} 
+
+	*n = m[0][0];	*d = m[1][0];
+ 	e = x0 - ((double) *n / (double) *d);
+	if (e > GMT_CONV4_LIMIT)
+		GMT_Report (GMT->parent, GMT_MSG_VERBOSE, "Bad fraftion, error = %g\n", e);
+}
+
 /*! . */
 void gmt_sprintf_float (struct GMT_CTRL *GMT, char *string, char *format, double x) {
 	/* Determines if %-apostrophe is used in the format for a float. If so, must temporarily switch to LC_NUMERIC=en_US */
@@ -9970,34 +9999,33 @@ void gmt_sprintf_float (struct GMT_CTRL *GMT, char *string, char *format, double
 	char *use_locale = strstr (format, "%'");
 	if (use_locale) setlocale (LC_NUMERIC, "en_US");
 #endif
-	if (GMT->current.plot.substitute_pi) {	/* Want to use pi when close to known multiples of pi */
-		/* We only allow n pi, 1.5pi, and fractions 3/4, 2/3, 1/2, 1/3, and 1/4.
+	if (GMT->current.plot.substitute_pi) {	/* Want to use pi when close to known multiples of pi. This variable is set per axis in gmt_xy_axis */
+		/* Any fraction of pi up to 1/20th allowed.
 		 * substitute_pi becomes true when items with "pi" are used in -R, -I etc. */
-		double f = fabs (x / M_PI);	/* Float multiple of pi */
-		int n = irint (f);
-		char s = (x < 0.0) ? '-' : '+';
-		if (n > 1 && fabs (f-(double)n) < GMT_CONV4_LIMIT)	/* Exact multiple of 2*pi, 3*pi, etc */
-			sprintf (string, "%c@~%dp@~", s, n);
-		else if (n == 1 && fabs (f-(double)n) < GMT_CONV4_LIMIT)	/* Just pi instead of 1*pi */
-			sprintf (string, "%c@~p@~", s);
-		else if (fabs (f-1.5) < GMT_CONV4_LIMIT)	/* 3/2 pi */
-			sprintf (string, "%c@~3p/2@~", s);
-		else if (fabs (f-1.0) < GMT_CONV4_LIMIT)
-			sprintf (string, "%c@~p@~", s);
-		else if (fabs (f-0.75) < GMT_CONV4_LIMIT)
-			sprintf (string, "%c@~3p/4@~", s);
-		else if (fabs (f-0.6666666666666666) < GMT_CONV4_LIMIT)
-			sprintf (string, "%c@~2p/3@~", s);
-		else if (fabs (f-0.5) < GMT_CONV4_LIMIT)
-			sprintf (string, "%c@~p/2@~", s);
-		else if (fabs (f-0.3333333333333333) < GMT_CONV6_LIMIT)
-			sprintf (string, "%c@~p/3@~", s);
-		else if (fabs (f-0.25) < GMT_CONV4_LIMIT)
-			sprintf (string, "%c@~p/4@~", s);
-		else if (fabs (f) < GMT_CONV4_LIMIT)
+		int k = 1, m, n;
+		char fmt[16] = {""};
+		double f = fabs (x / M_PI);		/* Float multiples of pi */
+		if (fabs (f) < GMT_CONV4_LIMIT) {	/* Deal with special case of zero pi */
 			sprintf (string, "0");
-		else
-			sprintf (string, format, x);
+			return;
+		}
+		make_fraction (GMT, f, 20, &n, &m);	/* Max 20th of pi */
+		string[0] = (x < 0.0) ? '-' : '+';	/* Place leading sign */
+		string[1] = '\0';			/* Chop off old string */
+		if (n > 1) {	/* Need an integer in front of pi */
+			k += sprintf (fmt, "%d", n);
+			strcat (string, fmt);
+			//k += irint (floor (log10 ((double)n))) + 1;	/* Add how many decimals needed for n */
+		}
+		strcat (string, "@~p@~");	/* Place the pi symbol */
+		k += 5;	/* Add number of characters just placed to print pi */
+		if (m > 1) {	/* Add the fractions part */
+			k += sprintf (fmt, "/%d", m);
+			strcat (string, fmt);
+			//k += irint (floor (log10 ((double)m))) + 2;	/* Add how many decimals needed for /m */
+		}
+		string[k] = '\0';	/* Truncate any old string */
+		//fprintf (stderr, "f = %g n = %d  m = %d.  String = %s\n", f, n, m, string);
 	}
 	else
 		sprintf (string, format, x);
@@ -15323,7 +15351,7 @@ unsigned int gmt_parse_array (struct GMT_CTRL *GMT, char option, char *argument,
 	 *	-T<argument>
 	 *
 	 * where <argument> is one of these:
-	 *	[<min/max/]<inc>[<unit>|+a|n|b|l]
+	 *	[<min/max/]<inc>[<unit>|+a|e|n|b|l]
 	 *	<file>
 	 *
 	 * Parsing:
@@ -15356,6 +15384,9 @@ unsigned int gmt_parse_array (struct GMT_CTRL *GMT, char option, char *argument,
 	 *	   equidistant in log2(t).  Here, inc must be an integer and indicates
 	 *	   the log2 increment.
 	 *      8) If +a is given then we will add the output array as a new output column.
+	 *      9) If +e is given when only an increment is given then we must keep the
+	 *	   increment exact and adjust max to ensure (max-min)/inc is an integer.
+	 *	   The default adjusts inc instead, if flag GMT_ARRAY_ROUND is passed.
 	 *
 	 * Note:   The effects in 4) and 5) are only allowed if the corresponding
 	 *	   flags are passed to the parser.
@@ -15403,17 +15434,20 @@ unsigned int gmt_parse_array (struct GMT_CTRL *GMT, char option, char *argument,
 		return (GMT_NOERROR);
 	}
 
-	if ((m = gmt_first_modifier (GMT, argument, "ablnt"))) {	/* Process optional modifiers +a, +b, +l, +n, +t */
+	if ((m = gmt_first_modifier (GMT, argument, "abelnt"))) {	/* Process optional modifiers +a, +b, +e, +l, +n, +t */
 		unsigned int pos = 0;	/* Reset to start of new word */
 		unsigned int n_errors = 0;
 		char p[GMT_LEN32] = {""};
-		while (gmt_getmodopt (GMT, 'T', m, "ablnt", &pos, p, &n_errors) && n_errors == 0) {
+		while (gmt_getmodopt (GMT, 'T', m, "abelnt", &pos, p, &n_errors) && n_errors == 0) {
 			switch (p[0]) {
 				case 'a':	/* Add spatial distance column to output */
 					T->add = true; 
 					break;
 				case 'b':	/* Do a log2 grid */
 					T->logarithmic2 = true; 
+					break;
+				case 'e':	/* Increment must be honored exactly */
+					T->exact_inc = true; 
 					break;
 				case 'n':	/* Gave number of points instead; calculate inc later */
 					T->count = true;
@@ -15456,7 +15490,7 @@ unsigned int gmt_parse_array (struct GMT_CTRL *GMT, char option, char *argument,
 	ns--;	/* ns is now the index to the txt array with the increment or count (2 or 0) */
 	len = strlen (txt[ns]);	if (len) len--;	/* Now txt[ns][len] holds a unit (or not) */
 	if (!has_inc && (T->logarithmic || T->logarithmic2)) {
-		GMT_Report (GMT->parent, GMT_MSG_NORMAL, "Syntax error -%c: Logarithmic array requires and increment argument\n", option);
+		GMT_Report (GMT->parent, GMT_MSG_NORMAL, "Syntax error -%c: Logarithmic array requires an increment argument\n", option);
 		return GMT_PARSE_ERROR;
 	}
 	/* 3. Check if we are working with absolute time.  This means there must be a T in both min or max arguments */
@@ -15531,7 +15565,7 @@ unsigned int gmt_parse_array (struct GMT_CTRL *GMT, char option, char *argument,
 				return GMT_PARSE_ERROR;
 			}
 			if (T->logarithmic && !(k_inc == 1 || k_inc == 2 || k_inc == 3 || k_inc < 0)) {
-				GMT_Report (GMT->parent, GMT_MSG_NORMAL, "Syntax error -%c: Log10 increment must be 1, 2, 3 (or a negative integer)\n", option);
+				GMT_Report (GMT->parent, GMT_MSG_NORMAL, "Syntax error -%c: Logarithmic increment must be 1, 2, 3 (or a negative integer)\n", option);
 				return GMT_PARSE_ERROR;
 			}
 		}
@@ -15571,7 +15605,13 @@ unsigned int gmt_parse_array (struct GMT_CTRL *GMT, char option, char *argument,
 	if (has_inc && ns == 0 && (flags & GMT_ARRAY_NOMINMAX)) {	/* The min/max will be set later */
 		T->delay[GMT_X] = T->delay[GMT_Y] = true;
 	}
-		
+	if (flags & GMT_ARRAY_ROUND)	/* Adjust increment to fit min/max so (max-min)/inc is an integer */
+		T->round = true;
+	if (T->exact_inc && T->set == 3) {
+		GMT_Report (GMT->parent, GMT_MSG_NORMAL, "Syntax error -%c: Modifier +e only applies when increment is given without any range\n", option);
+		return GMT_PARSE_ERROR;
+
+	}
 	if (m) m[0] = '+';	/* Restore the modifiers */
 	T->col = tcol;
 	
@@ -15635,7 +15675,7 @@ unsigned int gmt_create_array (struct GMT_CTRL *GMT, char option, struct GMT_ARR
 		return GMT_NOERROR;
 	}
 	
-	if (! (min == NULL && max == NULL)) {		/* Update min,max now */
+	if (T->set < 3 && ! (min == NULL && max == NULL)) {		/* Update min,max now */
 		T->min = *min;	T->max = *max;
 	}
 	if (T->count)	/* This means we gave a count instead of increment  */
@@ -15661,7 +15701,24 @@ unsigned int gmt_create_array (struct GMT_CTRL *GMT, char option, struct GMT_ARR
 		T->n = gmtlib_log_array (GMT, t0, t1, inc, &(T->array));
 	else if (T->logarithmic2)	/* Must call special function that deals with logarithmic arrays */
 		T->n = gmtlib_log2_array (GMT, t0, t1, inc, &(T->array));
-	else {	/* Equidistant intervals are straightforward - make sure the min/man/inc values harmonize */
+	else {	/* Equidistant intervals are straightforward - make sure the min/max/inc values harmonize */
+		if (T->exact_inc) {	/* Must enforce that max-min is a multiple of inc and adjust max if it is not */
+			double new, range = t1 - t0;
+			new = rint (range / inc) * inc;
+			if (!doubleAlmostEqualZero (new, range)) {	/* Must adjust t1 to match proper range */
+				t1 = t0 + new;
+				GMT_Report (GMT->parent, GMT_MSG_LONG_VERBOSE, "Range (max - min) is not a whole multiple of inc. Adjusted max to %g\n", option, t1);
+			}
+		}
+		else if (T->round) {	/* Must enforce an increment that fits the given range */
+			double new, range = t1 - t0;
+			unsigned int nt = urint (range / inc);
+			new = nt * inc;
+			if (nt && !doubleAlmostEqualZero (new, range)) {	/* Must adjust inc to match proper range */
+				inc = range / (nt - 1);
+				GMT_Report (GMT->parent, GMT_MSG_LONG_VERBOSE, "Range (max - min) is not a whole multiple of inc. Adjusted inc to %g\n", option, inc);
+			}
+		}
 		switch (gmt_minmaxinc_verify (GMT, t0, t1, inc, GMT_CONV4_LIMIT)) {
 			case 1:
 				GMT_Report (GMT->parent, GMT_MSG_NORMAL, "Syntax error -%c option: (max - min) is not a whole multiple of inc\n", option);
