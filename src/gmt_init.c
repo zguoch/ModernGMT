@@ -6722,7 +6722,7 @@ void gmt_segmentize_syntax (struct GMT_CTRL *GMT, char option, unsigned int mode
 	gmt_message (GMT, "\t     c: %s continuous line segments for each group [Default].\n", verb[mode]);
 	gmt_message (GMT, "\t     r: %s line segments from a reference point reset for each group.\n", verb[mode]);
 	gmt_message (GMT, "\t     n: %s networks of line segments between all points in each group.\n", verb[mode]);
-	if (mode == 0) gmt_message (GMT, "\t     v: Form vector line segments suitable for psxy -Sv+s\n");
+	if (mode == 0) gmt_message (GMT, "\t     v: Form vector line segments suitable for psxy -Sv|=<size>+s\n");
 	gmt_message (GMT, "\t     Optionally, append one of five ways to define a \"group\":\n");
 	gmt_message (GMT, "\t       a: All data is consider a single group; reference point is first point in the group.\n");
 	gmt_message (GMT, "\t       f: Each file is a separate group; reference point is reset to first point in the group.\n");
@@ -7674,7 +7674,7 @@ int gmt_parse_model (struct GMT_CTRL *GMT, char option, char *in_arg, unsigned i
 unsigned int gmt_parse_segmentize (struct GMT_CTRL *GMT, char option, char *in_arg, unsigned int mode, struct GMT_SEGMENTIZE *S) {
 	/* Parse segmentizing options in gmt convert (mode == 0) or psxy (mode == 1).
 	 * Syntax is given below (assuming option = -F here):
-	 * -F[c|n|r|v][a|f|s|p] or -Fr<origin>
+	 * -F[c|n|r|v][a|f|s|R] or -Fr<origin>
 	 * where c = continuous [Defuult], n = network, r = reference point, and v = vectors.
 	 * a = all files, f = per file, s = per segment [Default], r = per record.
 	 * Four different segmentizing schemes:
@@ -12526,9 +12526,14 @@ int gmt_parse_vector (struct GMT_CTRL *GMT, char symbol, char *text, struct GMT_
 			case 'n':	/* Vector shrinking head */
 				len = strlen (p);
 				j = (symbol == 'v' || symbol == 'V') ? gmtinit_get_unit (GMT, p[len-1]) : -1;	/* Only -Sv|V takes unit */
-				if (j >= GMT_CM) { S->u = j; S->u_set = true; }	/* Save the unit if given */
-				S->v.v_norm = (float)atof (&p[1]);	/* This is normalizing length in given units, not (yet) converted to inches or degrees (but see next line) */
-				if (symbol == '=') S->v.v_norm /= (float)GMT->current.proj.DIST_KM_PR_DEG;	/* Since norm distance is in km and we compute spherical degrees later */
+				S->v.v_norm = (float)atof (&p[1]);	/* This is normalizing length in given units, not (yet) converted to inches or degrees (but see next lines) */
+				if (symbol == '=')	/* Since norm distance is in km we convert to spherical degrees */
+					S->v.v_norm /= (float)GMT->current.proj.DIST_KM_PR_DEG;
+				else if (j >= GMT_CM)	/* Convert length from given unit to inches */
+					S->v.v_norm *= GMT->session.u2u[j][GMT_INCH];
+				else	/* Convert length from default unit to inches */
+					S->v.v_norm *= GMT->session.u2u[GMT->current.setting.proj_length_unit][GMT_INCH];
+				/* Here, v_norm is either in inches (if Cartesian vector) or spherical degrees (if geovector) */
 				break;
 			case 'o':	/* Sets oblique pole for small or great circles */
 				S->v.status |= PSL_VEC_POLE;
@@ -13239,9 +13244,13 @@ int gmt_parse_symbol_option (struct GMT_CTRL *GMT, char *text, struct GMT_SYMBOL
 				len = (int)strlen(text) - 1;
 				if (text[j] == 'n') {	/* Normalize option used */
 					k = gmtinit_get_unit (GMT, text[len]);
-					if (k >= 0) { p->u = k; p->u_set = true; }
 					p->v.v_norm = (float)atof (&text[j+1]);
+					if (k >= GMT_CM)	/* Convert length from given units to inch */
+						p->v.v_norm *= GMT->session.u2u[k][GMT_INCH];
+					else	/* Convert from default units to inch */
+						p->v.v_norm *= GMT->session.u2u[GMT->current.setting.proj_length_unit][GMT_INCH];
 					text[j] = 0;	/* Chop off the shrink part */
+					/* Here, p->v.v_norm will be in inches */
 				}
 				if (text[one]) {
 					char txt_c[GMT_LEN256] = {""};
