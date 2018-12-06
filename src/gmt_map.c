@@ -5981,6 +5981,7 @@ GMT_LOCAL int map_init_three_D (struct GMT_CTRL *GMT) {
 			gmt_xy_to_geo (GMT, &GMT->current.proj.z_project.corner_x[i], &GMT->current.proj.z_project.corner_y[i], xx[i], yy[i]);
 			gmt_xyz_to_xy (GMT, xx[i], yy[i], gmt_z_to_zz(GMT, GMT->common.R.wesn[ZLO]), &x, &y);
 			GMT->current.proj.z_project.xmin = MIN (GMT->current.proj.z_project.xmin, x);
+			// printf("第一类z_project.xmin计算: %f,   %f, %f\n",xx[i], yy[i],gmt_y_to_yy(GMT, GMT->common.R.wesn[ZLO]));
 			GMT->current.proj.z_project.xmax = MAX (GMT->current.proj.z_project.xmax, x);
 			GMT->current.proj.z_project.ymin = MIN (GMT->current.proj.z_project.ymin, y);
 			GMT->current.proj.z_project.ymax = MAX (GMT->current.proj.z_project.ymax, y);
@@ -6093,10 +6094,13 @@ GMT_LOCAL int map_init_three_D (struct GMT_CTRL *GMT) {
 		}
 		GMT->current.proj.z_project.x_off = GMT->current.proj.z_project.view_x - x;
 		GMT->current.proj.z_project.y_off = GMT->current.proj.z_project.view_y - y;
+		// printf("第一类x_off, y_off计算: %f,   %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
 	}
 	else {
 		GMT->current.proj.z_project.x_off = -GMT->current.proj.z_project.xmin;
 		GMT->current.proj.z_project.y_off = -GMT->current.proj.z_project.ymin;
+		// printf("第二类x_off, y_off计算: %f,   %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
+
 	}
 
 	/* Adjust the xmin/xmax and ymin/ymax because of xoff and yoff */
@@ -9212,9 +9216,9 @@ int gmt_proj_setup (struct GMT_CTRL *GMT, double wesn[]) {
 	
 	if (!GMT->current.map.n_lon_nodes) GMT->current.map.n_lon_nodes = urint (GMT->current.map.width / GMT->current.setting.map_line_step);
 	if (!GMT->current.map.n_lat_nodes) GMT->current.map.n_lat_nodes = urint (GMT->current.map.height / GMT->current.setting.map_line_step);
-
+	// printf("三维初始化map_init_three_D, %d,%d\n",GMT_Y,GMT->current.proj.z_project.quadrant);
 	map_init_three_D (GMT);
-
+	
 	return (GMT_NOERROR);
 }
 
