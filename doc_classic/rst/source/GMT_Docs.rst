@@ -3125,6 +3125,8 @@ sequence for font switching.
 +-------------------+----------------------------------------------------------------+
 | @!                | Creates one composite character of the next two characters     |
 +-------------------+----------------------------------------------------------------+
+| @.                | Prints the degree symbol                                       |
++-------------------+----------------------------------------------------------------+
 | @@                | Prints the @ sign itself                                       |
 +-------------------+----------------------------------------------------------------+
 
@@ -3149,6 +3151,10 @@ you must use the full octal code):
 +----------+------------+----------+------------+
 | @s       | ß          | @i       | í          |
 +----------+------------+----------+------------+
+
+However, if your input text contains UTF-8 code characters (e.g., ü, Î)
+and you select the ISOLatin1+ character encoding then GMT will substitute
+the correct PostScript octal codes for you automatically.
 
 PostScript fonts used in GMT may be re-encoded to include several
 accented characters used in many European languages. To access these,
@@ -8792,7 +8798,7 @@ inverse-video the label:
      gmt pscoast -R50/160/-15/15 -JM5.3i -Gburlywood -Sazure -A500 -K -P > GMT_App_O_7.ps
      gmt grdcontour geoid.nc -J -O -K -B20f10 -BWSne -C10 -A20+d+u" m"+f8p -Gl50/10S/160/10S -S10 \
      -T+l"-+" >> GMT_App_O_7.ps
-     gmt psxy -R -J -O -SqD15d:+gblack+fwhite+Ld+o+u\\260 -Wthick transect.txt >> GMT_App_O_7.ps
+     gmt psxy -R -J -O -SqD15d:+gblack+fwhite+Ld+o+u@. -Wthick transect.txt >> GMT_App_O_7.ps
 
 The output is presented as Figure :ref:`Contour label 7 <Contour_label_7>`.
 

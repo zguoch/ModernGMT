@@ -4737,7 +4737,10 @@ GMT_LOCAL int gmtinit_scanf_epoch (struct GMT_CTRL *GMT, char *s, int64_t *rata_
 
 /*! Scan a PostScript encoding string and look for degree, ring and other special encodings.
  * Use Brute Force and Ignorance.
+ * Scanning to find the codes for 7 symbols we plot but whose code depends on character set
+ * (ring, degree, colon, squote, dquote, minus, hyphen).
  */
+
 GMT_LOCAL int gmtinit_load_encoding (struct GMT_CTRL *GMT) {
 	char symbol[GMT_LEN256] = {""};
 	unsigned int code = 0, pos = 0;
@@ -4764,6 +4767,10 @@ GMT_LOCAL int gmtinit_load_encoding (struct GMT_CTRL *GMT) {
 			enc->code[gmt_squote] = code;
 		else if (strcmp (symbol, "colon") == 0)
 			enc->code[gmt_colon] = code;
+		else if (strcmp (symbol, "minus") == 0)
+			enc->code[gmt_minus] = code;
+		else if (strcmp (symbol, "hyphen") == 0)
+			enc->code[gmt_hyphen] = code;
 		code++;
 	}
 
@@ -4980,7 +4987,7 @@ void gmtinit_conf (struct GMT_CTRL *GMT) {
 	gmtlib_date_C_format (GMT, GMT->current.setting.format_date_map, &GMT->current.plot.calclock.date, 2);
 	/* FORMAT_GEO_MAP */
 	strcpy (GMT->current.setting.format_geo_map, "ddd:mm:ss");
-	gmtlib_plot_C_format (GMT);	/* Can fail if FORMAT_FLOAT_OUT not yet set, but is repeated at the end of gmt_begin */
+	gmtlib_plot_C_format (GMT);	/* Update format statements */
 	/* FORMAT_TIME_PRIMARY_MAP */
 	strcpy (GMT->current.setting.format_time[GMT_PRIMARY], "full");
 	/* FORMAT_TIME_SECONDARY_MAP */
@@ -5032,8 +5039,8 @@ void gmtinit_conf (struct GMT_CTRL *GMT) {
 	GMT->current.setting.given_unit[GMTCASE_MAP_ANNOT_MIN_SPACING] = 'p';
 	/* MAP_ANNOT_ORTHO */
 	strcpy (GMT->current.setting.map_annot_ortho, "we");
-	/* MAP_DEGREE_SYMBOL (ring) */
-	GMT->current.setting.map_degree_symbol = gmt_ring;
+	/* MAP_DEGREE_SYMBOL (degree) */
+	GMT->current.setting.map_degree_symbol = gmt_degree;
 	/* MAP_FRAME_AXES */
 	strcpy (GMT->current.setting.map_frame_axes, "WESNZ");
 	for (i = 0; i < 5; i++) GMT->current.map.frame.side[i] = 0;	/* Unset default settings */
@@ -8123,7 +8130,7 @@ unsigned int gmtlib_setparameter (struct GMT_CTRL *GMT, const char *keyword, cha
 			break;
 		case GMTCASE_FORMAT_GEO_MAP:
 			strncpy (GMT->current.setting.format_geo_map, value, GMT_LEN64-1);
-			gmtlib_plot_C_format (GMT);	/* Can fail if FORMAT_FLOAT_OUT not yet set, but is repeated at the end of gmt_begin */
+			gmtlib_plot_C_format (GMT);	/* Update format statements */
 			break;
 		case GMTCASE_FORMAT_TIME_MAP:
 			error = gmtlib_setparameter (GMT, "FORMAT_TIME_PRIMARY_MAP", value, core) +
@@ -8377,16 +8384,17 @@ unsigned int gmtlib_setparameter (struct GMT_CTRL *GMT, const char *keyword, cha
 			GMT_COMPAT_TRANSLATE ("MAP_DEGREE_SYMBOL");
 			break;
 		case GMTCASE_MAP_DEGREE_SYMBOL:
-			if (value[0] == '\0' || !strcmp (lower_value, "ring"))	/* Default */
-				GMT->current.setting.map_degree_symbol = gmt_ring;
-			else if (!strcmp (lower_value, "degree"))
+			if (value[0] == '\0' || !strcmp (lower_value, "degree"))	/* Default */
 				GMT->current.setting.map_degree_symbol = gmt_degree;
+			else if (!strcmp (lower_value, "ring"))
+				GMT->current.setting.map_degree_symbol = gmt_ring;
 			else if (!strcmp (lower_value, "colon"))
 				GMT->current.setting.map_degree_symbol = gmt_colon;
 			else if (!strcmp (lower_value, "none"))
 				GMT->current.setting.map_degree_symbol = gmt_none;
 			else
 				error = true;
+			gmtlib_plot_C_format (GMT);	/* Update format statement since degree symbol may have changed */
 			break;
 		case GMTCASE_BASEMAP_AXES:
 			GMT_COMPAT_TRANSLATE ("MAP_FRAME_AXES");
@@ -8712,6 +8720,7 @@ unsigned int gmtlib_setparameter (struct GMT_CTRL *GMT, const char *keyword, cha
 		case GMTCASE_PS_CHAR_ENCODING:
 			strncpy (GMT->current.setting.ps_encoding.name, value, GMT_LEN64-1);
 			gmtinit_load_encoding (GMT);
+			gmtlib_plot_C_format (GMT);	/* Since a chance in char set chances what is degree, ring, etc. */
 			break;
 		case GMTCASE_PS_COLOR:
 			GMT_COMPAT_TRANSLATE ("PS_COLOR_MODEL");
