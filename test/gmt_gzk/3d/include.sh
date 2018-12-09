@@ -3,7 +3,7 @@ function plot_gmtset()
 {
     # --------------------figure set--------------------
     # gmt gmtset GMT_LANGUAGE=CN1
-    # gmt gmtset PS_MEDIA=A1   #此选项在Modern模式下不支持
+    gmt gmtset PS_MEDIA=A1   #此选项在Modern模式下不支持
     # 设置纬度标注与坐标轴平行，只对经纬度起作用，线性投影使用 --MAP_ANNOT_ORTHO=,,,,
     gmt set MAP_ANNOT_OBLIQUE 32
     # 

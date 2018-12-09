@@ -269,7 +269,7 @@ GMT_LOCAL int parse_A_settings (struct GMT_CTRL *GMT, char *arg, struct PS2RASTE
 	 * New : -A[+g<fill>][+m<margins>][+n][+p<pen>][+r][+s|S[m]<width>[u][/<height>[u]]][+u]
 	 * Old : -A[-][u][<margins>][+g<fill>][+p<pen>][+r][+s|S[m]<width>[u][/<height>[u]]]
 	 */
-
+	// -A参数解析
 	bool error = false;
 	unsigned int pos = 0;
 	int j, k = 0, trim_j = -1;
