@@ -397,6 +397,22 @@ EXTERN_MSC int PSL_plotpolygon (struct PSL_CTRL *PSL, double *x, double *y, int 
 EXTERN_MSC int PSL_plotsegment (struct PSL_CTRL *PSL, double x0, double y0, double x1, double y1);
 EXTERN_MSC int PSL_plotsymbol (struct PSL_CTRL *PSL, double x, double y, double param[], int symbol);
 EXTERN_MSC int PSL_plottext (struct PSL_CTRL *PSL, double x, double y, double fontsize, char *text, double angle, int justify, int mode);
+// 无法将GMT参数直接传入PSL_plottext函数，因此这里重新建一个新函数，加入GMT参数
+/**
+ * @brief 对文字进行镜像翻转，因为官方版本中的三维切片剖面中的文字是镜像的
+ * 
+ * @param GMT 
+ * @param PSL 
+ * @param x 
+ * @param y 
+ * @param fontsize 
+ * @param text 
+ * @param angle 
+ * @param justify 
+ * @param mode 
+ * @return EXTERN_MSC PSL_plottext_mirror 
+ */
+EXTERN_MSC int PSL_plottext_mirror (int isMirrow,struct PSL_CTRL *PSL, double x, double y, double fontsize, char *text, double angle, int justify, int mode);
 EXTERN_MSC int PSL_plottextbox (struct PSL_CTRL *PSL, double x, double y, double fontsize, char *text, double angle, int justify, double offset[], int mode);
 EXTERN_MSC int PSL_plottextline (struct PSL_CTRL *PSL, double x[], double y[], int np[], int n_segments, void *arg1, void *arg2, char *label[], double angle[], int nlabel_per_seg[], double fontsize, int justify, double offset[], int mode);
 EXTERN_MSC int PSL_loadimage (struct PSL_CTRL *PSL, char *file, struct imageinfo *header, unsigned char **image);

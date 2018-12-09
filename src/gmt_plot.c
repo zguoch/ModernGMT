@@ -318,12 +318,12 @@ void AxisLable_Flip_GMT_X_Y(struct GMT_CTRL *GMT)
 	// 另一个剖面貌似没问题
 	switch(GMT->current.proj.z_project.plane%3){
 		case GMT_Y:
-			PSL_command(GMT->PSL,"%% 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+			// PSL_command(GMT->PSL,"%% Axislabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 			PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
 		break;
 		case GMT_X:
 			if(GMT->current.proj.z_project.view_azimuth>180){
-				PSL_command(GMT->PSL,"%% 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+				// PSL_command(GMT->PSL,"%% Axislabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
 			}
 		break;
@@ -342,13 +342,13 @@ double AxisTickLabel_Flip_GMT_X_Y(struct GMT_CTRL *GMT,double angle_text)
 {
 	switch(GMT->current.proj.z_project.plane%3){
 		case GMT_Y:
-			PSL_command(GMT->PSL,"%% 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+			// PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 			PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
 			angle_text-=180;  
 		break;
 		case GMT_X:
 			if(GMT->current.proj.z_project.view_azimuth>180){
-				PSL_command(GMT->PSL,"%% 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+				// PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
 			}
 			angle_text-=180;  
@@ -1601,12 +1601,14 @@ GMT_LOCAL void plot_map_symbol_ns (struct GMT_CTRL *GMT, struct PSL_CTRL *PSL, d
 	bool flip = (gmt_M_type (GMT, GMT_IN, GMT_X) == GMT_IS_LON && gmt_M_type (GMT, GMT_IN, GMT_Y) != GMT_IS_LAT && GMT->current.proj.scale[GMT_Y] < 0.0);
 	/* flip deals with the problem when x is lon and geographic annotation machinery is used but y is Cartesian and upside down */
 	nc = gmtlib_map_loncross (GMT, lon, south, north, &xings);
+	// 对于地理坐标系 -1 1 scale不管用，好像是中心移动了还是什么原因
 	for (i = 0; i < nc; i++) {
 		if (flip) for (k = 0; k < xings[i].nx; k++) {	/* Must turn sides 0 and 2 into sides 2 and 0 */
 			if ((xings[i].sides[k] % 2) == 0) xings[i].sides[k] = 2 - xings[i].sides[k];	/* Flip up and down sides */
 		}
 		plot_map_symbol (GMT, PSL, xings[i].xx, xings[i].yy, xings[i].sides, xings[i].angle, label, xings[i].nx, 0, annot, level, form);
 	}
+	// PSL_command (PSL, "%%郭志馗 DD\n");
 	if (nc) gmt_M_free (GMT, xings);
 }
 
@@ -1937,7 +1939,6 @@ GMT_LOCAL void plot_map_annotate (struct GMT_CTRL *GMT, struct PSL_CTRL *PSL, do
 	}
 	else
 		dy[0] = dy[1] = 0.0;
-
 	if (GMT->current.map.frame.axis[GMT_X].file_custom) dx[0] = 1.0;	/* To pass checks below */
 	if (GMT->current.map.frame.axis[GMT_Y].file_custom) dy[0] = 1.0;	/* To pass checks below */
 	
@@ -1957,7 +1958,7 @@ GMT_LOCAL void plot_map_annotate (struct GMT_CTRL *GMT, struct PSL_CTRL *PSL, do
 		GMT->current.map.is_world = false;
 		if (!(GMT->current.proj.projection_GMT == GMT_GENPER || GMT->current.proj.projection_GMT == GMT_GNOMONIC)) GMT->current.map.lon_wrap = false;
 	}
-
+	
 	w2 = (dx[1] > 0.0) ? floor (w / dx[1]) * dx[1] : 0.0;
 	s2 = (dy[1] > 0.0) ? floor (s / dy[1]) * dy[1] : 0.0;
 
@@ -1975,6 +1976,7 @@ GMT_LOCAL void plot_map_annotate (struct GMT_CTRL *GMT, struct PSL_CTRL *PSL, do
 			else
 				nx = gmtlib_linear_array (GMT, w, e, dx[k], GMT->current.map.frame.axis[GMT_X].phase, &val);
 			last = nx - 1;
+			// PSL_command (PSL, "%%郭志馗 CC\n");
 			for (i = 0; i < nx; i++) {	/* Worry that we do not try to plot 0 and 360 OR -180 and +180 on top of each other */
 				if (check_edges && ((i == 0 && val[i] == w) || (i == last && val[i] == e)))
 					continue;	/* To avoid/limit clipping of annotations */
@@ -2000,10 +2002,15 @@ GMT_LOCAL void plot_map_annotate (struct GMT_CTRL *GMT, struct PSL_CTRL *PSL, do
 					strncpy (label, label_c[i], GMT_LEN256-1);
 				else
 					gmtlib_get_annot_label (GMT, val[i], label, do_minutes, do_seconds, !trim, 0, is_world_save);
+				
 				plot_label_trim (label, trim);
 				shift = plot_shift_gridline (GMT, val[i], GMT_X);
+				
+				// 绘制地理坐标系North-South axis tick label的主要函数
 				plot_map_symbol_ns (GMT, PSL, val[i]+shift, label, s, n, annot, k, form);
+				// PSL_command (PSL, "%%郭志馗 EE\n");
 			}
+			
 			if (nx) gmt_M_free (GMT, val);
 			if (label_c) {
 				for (i = 0; i < nx; i++) gmt_M_str_free (label_c[i]);
@@ -2071,10 +2078,11 @@ GMT_LOCAL void plot_map_annotate (struct GMT_CTRL *GMT, struct PSL_CTRL *PSL, do
 			if (GMT->current.proj.z_down) gmt_M_free (GMT, tval);
 		}
 	}
-
+		
 	GMT->current.map.on_border_is_outside = false;	/* Reset back to default */
 	GMT->current.map.is_world = is_world_save;
 	GMT->current.map.lon_wrap = lon_wrap_save;
+		
 }
 
 GMT_LOCAL void plot_map_boundary (struct GMT_CTRL *GMT, struct PSL_CTRL *PSL, double w, double e, double s, double n) {
@@ -2762,7 +2770,7 @@ GMT_LOCAL void plot_format_symbol_string (struct GMT_CTRL *GMT, struct GMT_CUSTO
 
 GMT_LOCAL void plot_encodefont (struct PSL_CTRL *PSL, int font_no, char *name, unsigned int id) {
 	/* Create the custom symbol macro that selects the correct font and size for the symbol item */
-
+PSL_command(PSL,"%%绘制文字\n");
 	bool encode = (PSL->init.encoding && !PSL->internal.font[font_no].encoded);
 
 	if (PSL->internal.comments) PSL_command (PSL, "%% Set font encoding and size for this custom symbol %s item %d\n", name, id);
@@ -4306,8 +4314,8 @@ void gmt_xy_axis (struct GMT_CTRL *GMT, double x0, double y0, double length, dou
 		if (!flip) justify = gmt_flip_justify (GMT, justify);
 		text_angle += 180.0;
 	}
-//	else if (flip)
-//		justify = gmt_flip_justify (GMT, justify);
+	//	else if (flip)
+	//		justify = gmt_flip_justify (GMT, justify);
 
 	/* Ready to draw axis */
 	if (axis == GMT_X)
@@ -4422,7 +4430,6 @@ void gmt_xy_axis (struct GMT_CTRL *GMT, double x0, double y0, double length, dou
 				PSL_command (PSL, "mx\n");		/* Update the longest annotation */
 			}
 			PSL_command (PSL, "def\n");
-			PSL_command (PSL,"%%TickLabels\n"); //Tick labels
 			if (annot_pos == 0)
 				PSL_command (PSL, "/PSL_A0_y PSL_A0_y %d add ", PSL_IZ (PSL, GMT->current.setting.map_annot_offset[annot_pos]));
 			else
@@ -4665,9 +4672,10 @@ void gmt_map_basemap (struct GMT_CTRL *GMT) {
 	plot_map_tickmarks (GMT, PSL, w, e, s, n);
 
 	plot_map_boundary (GMT, PSL, w, e, s, n);	/* This sets frame.side[] = true|false so must come before map_annotate */
-
+	// 绘制地理坐标系的坐标轴刻度标注
+	// PSL_command (PSL, "%%开始\n");
 	plot_map_annotate (GMT, PSL, w, e, s, n);
-
+	// PSL_command (PSL, "%%结束\n");
 	if (GMT->current.proj.got_azimuths) gmt_M_uint_swap (GMT->current.map.frame.side[E_SIDE], GMT->current.map.frame.side[W_SIDE]);	/* Undo temporary swap */
 
 	if (clip_on) gmt_map_clip_off (GMT);
@@ -5364,7 +5372,7 @@ int gmt_draw_custom_symbol (struct GMT_CTRL *GMT, double x0, double y0, double s
 			s = s->next;
 		}
 	}
-
+	
 	/* We encapsulate symbol with gsave and translate origin to (x0, y0) first */
 	PSL_command (PSL, "V ");
 	PSL_setorigin (PSL, x0, y0, 0.0, PSL_FWD);

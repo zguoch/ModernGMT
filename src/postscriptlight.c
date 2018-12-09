@@ -1430,7 +1430,6 @@ static int psl_putfont (struct PSL_CTRL *PSL, double fontsize) {
 static int psl_encodefont (struct PSL_CTRL *PSL, int font_no) {
 	if (PSL->init.encoding == NULL) return (PSL_NO_ERROR);		/* Already have StandardEncoding by default */
 	if (PSL->internal.font[font_no].encoded) return (PSL_NO_ERROR);	/* Already reencoded or should not be reencoded ever */
-
 	/* Re-encode fonts with Standard+ or ISOLatin1[+] encodings */
 	PSL_command (PSL, "PSL_font_encode %d get 0 eq {%s_Encoding /%s /%s PSL_reencode PSL_font_encode %d 1 put} if", font_no, PSL->init.encoding, PSL->internal.font[font_no].name, PSL->internal.font[font_no].name, font_no);
 	(PSL->internal.comments) ? PSL_command (PSL, "\t%% Set this font\n") : PSL_command (PSL, "\n");
@@ -4864,7 +4863,7 @@ int PSL_deftextdim (struct PSL_CTRL *PSL, const char *dim, double fontsize, char
 	return (sub_on|super_on|scaps_on|symbol_on|font_on|size_on|color_on|under_on);
 }
 
-int PSL_plottext (struct PSL_CTRL *PSL, double x, double y, double fontsize, char *text, double angle, int justify, int mode) {
+int PSL_plottext_mirror (int isMirrow,struct PSL_CTRL *PSL, double x, double y, double fontsize, char *text, double angle, int justify, int mode) {
 	/* General purpose text plotter for single line of text.  For paragraphs, see PSL_plotparagraph.
 	* PSL_plottext positions and justifies the text string according to the parameters given.
 	* The adjustments requires knowledge of font metrics and characteristics; hence all such
@@ -4894,7 +4893,6 @@ int PSL_plottext (struct PSL_CTRL *PSL, double x, double y, double fontsize, cha
 	*   |----------------|
 	*   1	    2	     3
 	*/
-
 	char *piece = NULL, *piece2 = NULL, *ptr = NULL, *string = NULL, previous[BUFSIZ] = {""}, *plast = NULL;
 	/* PS strings to be used dependent on "mode" */
 	const char *op[4] = {"Z", "false charpath fs", "false charpath fs", "false charpath V S U fs"};
@@ -4918,7 +4916,7 @@ int PSL_plottext (struct PSL_CTRL *PSL, double x, double y, double fontsize, cha
 		fontsize = -fontsize;
 	psl_encodefont (PSL, PSL->current.font_no);
 	psl_putfont (PSL, fontsize);
-
+	// PSL_command(PSL,"%%绘制文字1\n");
 	if (text) {
 		if (strlen (text) >= (PSL_BUFSIZ-1)) {	/* We gotta have some limit on how long a single string can be... */
 			PSL_message (PSL, PSL_MSG_NORMAL, "Warning: text_item > %d long - text not plotted!\n", PSL_BUFSIZ);
@@ -4935,18 +4933,22 @@ int PSL_plottext (struct PSL_CTRL *PSL, double x, double y, double fontsize, cha
 		justify = abs (justify);	/* Just make sure since the stripping has already occurred */
 		string = psl_prepare_text (PSL, PSL->current.string);	/* Check for escape sequences */
 	}
-
+	PSL_command(PSL,"%%绘制文字开始\n");
+	if(isMirrow==1)PSL_command(PSL,"-1 1 scale\n\n");
 	if (angle != 0.0) PSL_command (PSL, "V %.3g R ", angle);
-
+	// 物特殊符号的文字
 	if (!strchr (string, '@')) {	/* Plain text ... this is going to be easy! */
+		
 		PSL_command (PSL, "(%s) %s%s", string, justcmd[justify], op[mode]);
 		if (mode == 1) PSL_command (PSL, " S");
 		else if (mode > 1) PSL_command (PSL, " N");
 		PSL_command (PSL, (angle != 0.0 ) ? " U\n" : "\n");
 		PSL_free (string);
+		PSL_command(PSL,"%%绘制文字结束plain\n");
+		if(isMirrow==1)PSL_command(PSL,"-1 1 scale\n\n");
 		return (PSL_NO_ERROR);
 	}
-
+	
 	/* For more difficult cases we use the PSL_deftextdim machinery to get the size of the font box */
 
 	if (justify > 1) {
@@ -5188,6 +5190,348 @@ int PSL_plottext (struct PSL_CTRL *PSL, double x, double y, double fontsize, cha
 	if (angle != 0.0) PSL_command (PSL, "U\n");
 	PSL->current.fontsize = 0.0;	/* Force reset */
 
+	PSL_command(PSL,"%%绘制文字结束:特殊字符\n");
+	if(isMirrow==1)PSL_command(PSL,"-1 1 scale\n\n");
+	PSL_free (piece);
+	PSL_free (piece2);
+	PSL_free (string);
+
+	if (sub_on) PSL_message (PSL, PSL_MSG_NORMAL, "Warning: Sub-scripting not terminated [%s]\n", text);
+	if (super_on) PSL_message (PSL, PSL_MSG_NORMAL, "Warning: Super-scripting not terminated [%s]\n", text);
+	if (scaps_on) PSL_message (PSL, PSL_MSG_NORMAL, "Warning: Small-caps not terminated [%s]\n", text);
+	if (symbol_on) PSL_message (PSL, PSL_MSG_NORMAL, "Warning: Symbol font change not terminated [%s]\n", text);
+	if (size_on) PSL_message (PSL, PSL_MSG_NORMAL, "Warning: Font-size change not terminated [%s]\n", text);
+	if (color_on) PSL_message (PSL, PSL_MSG_NORMAL, "Warning: Font-color change not terminated [%s]\n", text);
+	if (under_on) PSL_message (PSL, PSL_MSG_NORMAL, "Warning: Text underline not terminated [%s]\n", text);
+
+	return (sub_on|super_on|scaps_on|symbol_on|font_on|size_on|color_on|under_on);
+}
+int PSL_plottext (struct PSL_CTRL *PSL, double x, double y, double fontsize, char *text, double angle, int justify, int mode) {
+	/* General purpose text plotter for single line of text.  For paragraphs, see PSL_plotparagraph.
+	* PSL_plottext positions and justifies the text string according to the parameters given.
+	* The adjustments requires knowledge of font metrics and characteristics; hence all such
+	* adjustments are passed on to the PostScript interpreter who will calculate the offsets.
+	* The arguments to PSL_plottext are as follows:
+	*
+	* x,y:		location of string
+	* fontsize:	fontsize in points.  If negative, assume currentpoint is already set,
+	*		else we use x, y to set a new currentpoint.
+	* text:		text string to be plotted in the current color (set by PSL_setcolor).
+	*		If NULL is given then we assume PSL_plottextbox has just been called.
+	* angle:	angle between text baseline and the horizontal.
+	* justify:	indicates where on the textstring the x,y point refers to, see fig below.
+	*		If negative then we strip leading and trailing blanks from the text.
+	*		0 means no justification (already done separately).
+	* mode:	0 = normal text filled with solid color; 1 = draw outline of text using
+	*		the current line width and color; the text is filled with the current fill
+	*		(if set, otherwise no filling is taking place); 2 = no outline, but text fill
+	*		is a pattern so we use the outline path and not the show operator;
+	*       3 = same as 1, except that half the outline width is plotted on the outside
+	*       of the filled text, so none of the text font is obscured by the outline
+	*		(If the text is not filled, 1 operates the same as 3).
+	*
+	*   9	    10      11
+	*   |----------------|
+	*   5       6        7
+	*   |----------------|
+	*   1	    2	     3
+	*/
+	char *piece = NULL, *piece2 = NULL, *ptr = NULL, *string = NULL, previous[BUFSIZ] = {""}, *plast = NULL;
+	/* PS strings to be used dependent on "mode" */
+	const char *op[4] = {"Z", "false charpath fs", "false charpath fs", "false charpath V S U fs"};
+	/* PS strings to be used dependent on "justify". Empty strings added for unused values. */
+	const char *justcmd[12] = {"", "bl ", "bc ", "br ", "", "ml ", "mc ", "mr ", "", "tl ", "tc ", "tr "};
+	/* PS strings to be used dependent on "justify%4". Empty string added for unused value. */
+	const char *align[4] = {"0", "-2 div", "neg", ""};
+	int dy, i = 0, j, font, x_just, y_just, upen, ugap;
+	int sub_on, super_on, scaps_on, symbol_on, font_on, size_on, color_on, under_on, old_font, n_uline, start_uline, stop_uline, last_chr, kase = PSL_LC;
+	bool last_sub = false, last_sup = false, supersub;
+	double orig_size, small_size, size, scap_size, ustep[2], dstep, last_rgb[4] = {0.0, 0.0, 0.0, 0.0};
+
+	if (fontsize == 0.0) return (PSL_NO_ERROR);	/* Nothing to do if text has zero size */
+
+	if (fontsize > 0.0) {	/* Set a new anchor point */
+		PSL->internal.ix = psl_ix (PSL, x);
+		PSL->internal.iy = psl_iy (PSL, y);
+		PSL_command (PSL, "%d %d M ", PSL->internal.ix, PSL->internal.iy);
+	}
+	else
+		fontsize = -fontsize;
+	psl_encodefont (PSL, PSL->current.font_no);
+	psl_putfont (PSL, fontsize);
+	// PSL_command(PSL,"%%绘制文字1\n");
+	if (text) {
+		if (strlen (text) >= (PSL_BUFSIZ-1)) {	/* We gotta have some limit on how long a single string can be... */
+			PSL_message (PSL, PSL_MSG_NORMAL, "Warning: text_item > %d long - text not plotted!\n", PSL_BUFSIZ);
+			return (PSL_BAD_TEXT);
+		}
+		if (justify < 0)  {	/* Strip leading and trailing blanks */
+			for (i = 0; text[i] == ' '; i++);
+			for (j = (int)strlen (text) - 1; text[j] == ' '; j--) text[j] = 0;
+			justify = -justify;
+		}
+		string = psl_prepare_text (PSL, &text[i]);	/* Check for escape sequences */
+	}
+	else {
+		justify = abs (justify);	/* Just make sure since the stripping has already occurred */
+		string = psl_prepare_text (PSL, PSL->current.string);	/* Check for escape sequences */
+	}
+	PSL_command(PSL,"%%绘制文字开始\n");
+	if (angle != 0.0) PSL_command (PSL, "V %.3g R ", angle);
+	// 物特殊符号的文字
+	if (!strchr (string, '@')) {	/* Plain text ... this is going to be easy! */
+		
+		PSL_command (PSL, "(%s) %s%s", string, justcmd[justify], op[mode]);
+		if (mode == 1) PSL_command (PSL, " S");
+		else if (mode > 1) PSL_command (PSL, " N");
+		PSL_command (PSL, (angle != 0.0 ) ? " U\n" : "\n");
+		PSL_free (string);
+		PSL_command(PSL,"%%绘制文字结束plain\n");
+		return (PSL_NO_ERROR);
+	}
+	
+	/* For more difficult cases we use the PSL_deftextdim machinery to get the size of the font box */
+
+	if (justify > 1) {
+		x_just = (justify + 3) % 4;	/* Gives 0 (left justify, i.e., do nothing), 1 (center), or 2 (right justify) */
+		y_just = justify / 4;		/* Gives 0 (bottom justify, i.e., do nothing), 1 (middle), or 2 (top justify) */
+		if (x_just && y_just) {
+			PSL_deftextdim (PSL, "-b", fontsize, string);	/* Get width and height of string */
+			PSL_command (PSL, "%s exch %s exch G\n", align[y_just], align[x_just]);
+		}
+		else if (x_just) {
+			PSL_deftextdim (PSL, "-w", fontsize, string);	/* Get width of string */
+			PSL_command (PSL, "%s 0 G\n", align[x_just]);
+		}
+		else {
+			PSL_deftextdim (PSL, "-h", fontsize, string);	/* Get height of string */
+			PSL_command (PSL, "%s 0 exch G\n", align[y_just]);
+		}
+	}
+
+	/* Here, we have special request for Symbol font and sub/superscript
+	 * @~ toggles between Symbol font and default font
+	 * @%<fontno>% switches font number <fontno>; give @%% to reset
+	 * @- toggles between subscript and normal text
+	 * @+ toggles between superscript and normal text
+	 * @# toggles between Small caps and normal text
+	 * @! will make a composite character of next two characters
+	 * Use @@ to print a single @
+	 */
+
+	piece  = PSL_memory (PSL, NULL, 2 * PSL_BUFSIZ, char);
+	piece2 = PSL_memory (PSL, NULL, PSL_BUFSIZ, char);
+
+	/* Now we can start printing text items */
+
+	supersub = (strstr (string, "@-@+") || strstr (string, "@+@-"));	/* Check for sub/super combo */
+	ptr = strtok_r (string, "@", &plast);
+	if(string[0] != '@') {	/* String has @ but not at start - must deal with first piece explicitly */
+		PSL_command (PSL, "(%s) %s\n", ptr, op[mode]);
+		last_chr = ptr[strlen(ptr)-1];
+		ptr = strtok_r (NULL, "@", &plast);
+		kase = ((last_chr > 0 && last_chr < 255) && islower (last_chr)) ? PSL_LC : PSL_UC;
+
+	}
+
+	font = old_font = PSL->current.font_no;
+	sub_on = super_on = scaps_on = symbol_on = font_on = size_on = color_on = under_on = false;
+	size = orig_size = fontsize;
+	small_size = size * PSL->current.subsupsize;
+	scap_size = size * PSL->current.scapssize;
+	ustep[PSL_LC] = PSL->current.sup_up[PSL_LC] * size;	/* Super-script baseline raised by given fraction of font size for lower case*/
+	ustep[PSL_UC] = PSL->current.sup_up[PSL_UC] * size;	/* Super-script baseline raised by given fraction of font size for upper case */
+	dstep = PSL->current.sub_down * size;
+	upen = psl_ip (PSL, 0.025 * size);	/* Underline pen thickness */
+	ugap = psl_ip (PSL, 0.075 * size);	/* Underline shift */
+	start_uline = stop_uline = n_uline = 0;
+
+	while (ptr) {	/* Loop over all the sub-text items separated by escape characters */
+		if (ptr[0] == '!') {	/* Composite character */
+			ptr++;
+			if (ptr[0] == '\\') {	/* Octal code */
+				strncpy (piece, ptr, 4U);
+				piece[4] = 0;
+				ptr += 4;
+			}
+			else {
+				piece[0] = ptr[0];	piece[1] = 0;
+				ptr++;
+			}
+			if (ptr[0] == '\\') {	/* Octal code again */
+				strncpy (piece2, ptr, 4U);
+				piece2[4] = 0;
+				ptr += 4;
+			}
+			else {
+				piece2[0] = ptr[0];	piece2[1] = 0;
+				ptr++;
+			}
+			/* Try to center justify these two character to make a composite character - may not be right */
+			PSL_command (PSL, "%d F%d (%s) E exch %s -2 div dup 0 G\n", psl_ip (PSL, size), font, piece2, op[mode]);
+			PSL_command (PSL, "(%s) E -2 div dup 0 G exch %s sub neg dup 0 lt {pop 0} if 0 G\n", piece, op[mode]);
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else if (ptr[0] == '~') {	/* Symbol font */
+			symbol_on = !symbol_on;
+			font = (font == PSL_SYMBOL_FONT) ? old_font : PSL_SYMBOL_FONT;
+			ptr++;
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else if (ptr[0] == '%') {	/* Switch font option */
+			font_on = !font_on;
+			ptr++;
+			if (*ptr == '%')
+				font = old_font;
+			else {
+				old_font = font;
+				font = atoi (ptr);
+				psl_encodefont (PSL, font);
+			}
+			while (*ptr != '%') ptr++;
+			ptr++;
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else if (ptr[0] == '-') {	/* Subscript toggle  */
+			ptr++;
+			sub_on = !sub_on;
+			if (sub_on) {
+				if (last_sup)	/* Just did a super-script, must reset horizontal position */
+					PSL_command (PSL, "PSL_last_width neg 0 G ");	/* Rewind position to orig baseline */
+				else if (supersub)	/* Need to remember the width of the subscript */
+					PSL_command (PSL, "/PSL_last_width %d F%d (%s) sw def\n", psl_ip (PSL, small_size), font, ptr);	/* Compute width of subscript text */
+				if (ptr[0]) strcpy (previous, ptr);	/* Keep copy of possibly previous text */
+			}
+			else
+				last_sub = (last_sup || ptr[0] == 0) ? supersub : false;	/* Only true when this is a possibility */
+			size = (sub_on) ? small_size : fontsize;
+			dy = (sub_on) ? -psl_ip (PSL, dstep) : psl_ip (PSL, dstep);
+			PSL_command (PSL, "0 %d G ", dy);
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else if (ptr[0] == '+') {	/* Superscript toggle */
+			ptr++;
+			super_on = !super_on;
+			if (super_on) {
+				if (last_sub)	/* Just did a sub-script, must reset horizontal position */
+					PSL_command (PSL, "PSL_last_width neg 0 G ");	/* Rewind position to orig baseline */
+				else if (supersub)	/* Need to remember the width of the superscript */
+					PSL_command (PSL, "/PSL_last_width %d F%d (%s) sw def\n", psl_ip (PSL, small_size), font, ptr);	/* Compute width of subscript text */
+				if (ptr[0]) strcpy (previous, ptr);	/* Keep copy of possibly previous text */
+			}
+			else
+				last_sup = (last_sub || ptr[0] == 0) ? supersub : false;	/* Only true when this is a possibility */
+			size = (super_on) ? small_size : fontsize;
+			dy = (super_on) ? psl_ip (PSL, ustep[kase]) : -psl_ip (PSL, ustep[kase]);
+			PSL_command (PSL, "0 %d G ", dy);
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else if (ptr[0] == '#') {	/* Small caps */
+			scaps_on = !scaps_on;
+			size = (scaps_on) ? scap_size : fontsize;
+			ptr++;
+			(scaps_on) ? psl_get_uppercase (piece, ptr) : (void) strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else if (ptr[0] == ':') {	/* Font size change */
+			size_on = !size_on;
+			ptr++;
+			if (ptr[0] == ':')	/* Reset size */
+				size = fontsize = orig_size;
+			else {
+				size = fontsize = atof (ptr);
+				while (*ptr != ':') ptr++;
+			}
+			small_size = size * PSL->current.subsupsize;	scap_size = size * PSL->current.scapssize;
+			ustep[PSL_LC] = PSL->current.sup_up[PSL_LC] * size;
+			ustep[PSL_UC] = PSL->current.sup_up[PSL_UC] * size;
+			dstep = PSL->current.sub_down * size;
+			upen = psl_ip (PSL, 0.025 * size);	/* Underline pen thickness */
+			ugap = psl_ip (PSL, 0.075 * size);	/* Underline shift */
+			ptr++;
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else if (ptr[0] == ';') {	/* Font color change. r/g/b in 0-255 */
+			int n_scan, k, error = false;
+			double rgb[4];
+			color_on = !color_on;
+			ptr++;
+			if (ptr[0] == ';') {	/* Reset color to previous value */
+				PSL_command (PSL, "%s ", psl_putcolor (PSL, last_rgb));
+				PSL_rgb_copy (PSL->current.rgb[PSL_IS_FONT], last_rgb);	/* Update present color */
+			}
+			else {
+				char *s = NULL;
+				j = 0;
+				while (ptr[j] != ';') j++;
+				ptr[j] = 0;
+				if ((s = strchr (ptr, '@')) != NULL) {	/* Also gave transparency */
+					rgb[3] = atof (&s[1]) / 100.0;
+					s[0] = 0;
+				}
+				else
+					rgb[3] = 0.0;
+				n_scan = sscanf (ptr, "%lg/%lg/%lg", &rgb[0], &rgb[1], &rgb[2]);
+				if (n_scan == 1) {	/* Got gray shade */
+					rgb[0] /= 255.0;	/* Normalize to 0-1 */
+					rgb[1] = rgb[2] = rgb[0];
+					if (rgb[0] < 0.0 || rgb[0] > 1.0) error++;
+				}
+				else if (n_scan == 3) {	/* Got r/g/b */
+					for (k = 0; k < 3; k++) {
+						rgb[k] /= 255.0;	/* Normalize to 0-1 */
+						if (rgb[k] < 0.0 || rgb[k] > 1.0) error++;
+					}
+				}
+				else {	/* Got crap */
+					PSL_message (PSL, PSL_MSG_NORMAL, "Warning: Bad color change (%s) - ignored\n", ptr);
+					error++;
+				}
+
+				ptr[j] = ';';
+				if (s) s[0] = '@';
+				while (*ptr != ';') ptr++;
+				if (!error) {
+					PSL_command (PSL, "%s ", psl_putcolor (PSL, rgb));
+					PSL_rgb_copy (last_rgb, PSL->current.rgb[PSL_IS_FONT]);	/* Save previous color */
+					PSL_rgb_copy (PSL->current.rgb[PSL_IS_FONT], rgb);	/* Update present color */
+				}
+			}
+			ptr++;
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else if (ptr[0] == '_') {	/* Toggle underline */
+			under_on = !under_on;
+			n_uline++;
+			if (n_uline%2)
+				start_uline = true;
+			else
+				stop_uline = true;
+			ptr++;
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		}
+		else
+			strncpy (piece, ptr, 2 * PSL_BUFSIZ);
+		if (start_uline) PSL_command (PSL, "currentpoint /y0_u edef /x0_u edef\n");
+		if (stop_uline) PSL_command (PSL, "V %d W currentpoint pop /x1_u edef x0_u y0_u %d sub M x1_u x0_u sub 0 D S x1_u y0_u M U\n", upen, ugap);
+		start_uline = stop_uline = false;
+		if (strlen (piece) > 0) {
+			if (last_sub && last_sup) {	/* May possibly need to move currentpoint a bit to the widest piece */
+				PSL_command (PSL, "/PSL_last_width PSL_last_width (%s) sw sub dup 0 lt {pop 0} if def\n", previous);	/* Compute width of superscript text and see if we must move a bit */
+				PSL_command (PSL, "PSL_last_width 0 G ");	/* Rewind position to orig baseline */
+				last_sub = last_sup = false;
+			}
+			PSL_command (PSL, "%d F%d (%s) %s\n", psl_ip (PSL, size), font, piece, op[mode]);
+			last_chr = ptr[strlen(piece)-1];
+			if (!super_on && (last_chr > 0 && last_chr < 255)) kase = (islower(last_chr)) ? PSL_LC : PSL_UC;
+		}
+		ptr = strtok_r (NULL, "@", &plast);
+	}
+	if (mode == 1) PSL_command (PSL, "S\n");
+	else if (mode > 1) PSL_command (PSL, "N\n");
+	if (angle != 0.0) PSL_command (PSL, "U\n");
+	PSL->current.fontsize = 0.0;	/* Force reset */
+
+	PSL_command(PSL,"%%绘制文字结束:特殊字符\n");
 	PSL_free (piece);
 	PSL_free (piece2);
 	PSL_free (string);

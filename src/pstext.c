@@ -127,7 +127,30 @@ struct PSTEXT_INFO {
 	struct GMT_PEN vecpen;
 	struct GMT_FILL boxfill;
 };
-
+/**
+ * @brief 三维视图中的X,Y剖面中的文字镜像翻转
+ * 
+ * @param GMT 
+ */
+int Text_Flip_GMT_X_Y(struct GMT_CTRL *GMT)
+{
+	// 另一个剖面貌似没问题
+	switch(GMT->current.proj.z_project.plane%3){
+		case GMT_Y:
+			// PSL_command(GMT->PSL,"%% Axislabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+			// PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+			return 1;
+		break;
+		case GMT_X:
+			if(GMT->current.proj.z_project.view_azimuth>180){
+				// PSL_command(GMT->PSL,"%% Axislabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+				// PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+				return 1;
+			}
+		break;
+	}
+	return 0;
+}
 GMT_LOCAL void *New_Ctrl (struct GMT_CTRL *GMT) {	/* Allocate and initialize a new control structure */
 	struct PSTEXT_CTRL *C;
 
@@ -1139,7 +1162,10 @@ int GMT_pstext (void *V_API, int mode, void *args) {
 				m++;
 			}
 			else {
-				PSL_plottext (PSL, plot_x, plot_y, T.font.size, curr_txt, T.paragraph_angle, T.block_justify, fmode);
+				// PSL_command(PSL,"%%绘制文字主控函数\n");
+				// Text_Flip_GMT_X_Y(GMT); //文字镜像翻转
+				PSL_plottext_mirror (Text_Flip_GMT_X_Y(GMT),PSL, plot_x, plot_y, T.font.size, curr_txt, T.paragraph_angle, T.block_justify, fmode);
+				// Text_Flip_GMT_X_Y(GMT); //恢复
 			}
 			if (Ctrl->A.active) T.paragraph_angle = save_angle;	/* Restore original angle */
 		}
