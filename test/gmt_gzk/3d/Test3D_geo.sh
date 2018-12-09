@@ -46,7 +46,7 @@ fmt=png
 
 rm $figname.ps
 gmt psbasemap -JM$width_fig_x -JZ${width_fig_z}  -R$range_LonLatZ -Ba -BwsenZ -Bza+l"Depth (m)" -pz$angle_view  -TdjTR+o3c/-4c+w2c+f+lW,,S, --FONT_TITLE=12p --MAP_TITLE_OFFSET=0.1c --PS_MEDIA=A4 >$figname.ps
-gmt psconvert $figname.ps -Tf -A+gred -V
+gmt psconvert $figname.ps -Tf -A -V
 open $figname.pdf
 
 rm gmt.conf gmt.history
