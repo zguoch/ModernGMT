@@ -306,6 +306,57 @@ GMT_LOCAL int gmt_get_ppid (struct GMT_CTRL *GMT) {
 }
 #endif
 
+/**
+ * @brief 对-JZ -p参数形成的x，y剖面的文字进行镜像翻转
+ * 
+ * 因为官方版本中的剖面文字是镜像的
+ * 
+ * 利用Postscript的scale命令，在文字之前写入 -1 1 scale，然后在文本之后再写一次，恢复翻转，以免对后面绘图命令的坐标旋转产生影响
+ */
+void AxisLable_Flip_GMT_X_Y(struct GMT_CTRL *GMT)
+{
+	// 另一个剖面貌似没问题
+	switch(GMT->current.proj.z_project.plane%3){
+		case GMT_Y:
+			PSL_command(GMT->PSL,"%% 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+			PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+		break;
+		case GMT_X:
+			if(GMT->current.proj.z_project.view_azimuth>180){
+				PSL_command(GMT->PSL,"%% 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+			}
+		break;
+	}
+}
+/**
+ * @brief 切片剖面的坐标轴刻度标注文字镜像翻转
+ * 
+ * 对于GMT_X的情况只对view_azimuth>180的情况操作；
+ * 除了翻转外还有一个角度，官方版本中加了180度，会导致问题，这里减去180度
+ * @param GMT 
+ * @param angle_text 
+ * @return double 
+ */
+double AxisTickLabel_Flip_GMT_X_Y(struct GMT_CTRL *GMT,double angle_text)
+{
+	switch(GMT->current.proj.z_project.plane%3){
+		case GMT_Y:
+			PSL_command(GMT->PSL,"%% 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+			PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+			angle_text-=180;  
+		break;
+		case GMT_X:
+			if(GMT->current.proj.z_project.view_azimuth>180){
+				PSL_command(GMT->PSL,"%% 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+			}
+			angle_text-=180;  
+		break;
+	}
+	return angle_text;  
+}
+
 /*	GMT_LINEAR PROJECTION MAP BOUNDARY	*/
 
 GMT_LOCAL void plot_linear_map_boundary (struct GMT_CTRL *GMT, struct PSL_CTRL *PSL, double w, double e, double s, double n) {
@@ -4371,6 +4422,7 @@ void gmt_xy_axis (struct GMT_CTRL *GMT, double x0, double y0, double length, dou
 				PSL_command (PSL, "mx\n");		/* Update the longest annotation */
 			}
 			PSL_command (PSL, "def\n");
+			PSL_command (PSL,"%%TickLabels\n"); //Tick labels
 			if (annot_pos == 0)
 				PSL_command (PSL, "/PSL_A0_y PSL_A0_y %d add ", PSL_IZ (PSL, GMT->current.setting.map_annot_offset[annot_pos]));
 			else
@@ -4390,9 +4442,12 @@ void gmt_xy_axis (struct GMT_CTRL *GMT, double x0, double y0, double length, dou
 					strncpy (string, label_c[i], GMT_LEN256-1);
 				else
 					gmtlib_get_coordinate_label (GMT, string, &GMT->current.plot.calclock, format, T, knots[i]);	/* Get annotation string */
-				PSL_plottext (PSL, 0.0, 0.0, -font.size, string, text_angle, justify, form);
+				double angle_text2=AxisTickLabel_Flip_GMT_X_Y(GMT,text_angle); //坐标轴标注文字翻转
+				PSL_plottext (PSL, 0.0, 0.0, -font.size, string, angle_text2, justify, form);
+				AxisTickLabel_Flip_GMT_X_Y(GMT,text_angle); //恢复：坐标轴标注文字翻转
 			}
 			if (!faro) PSL_command (PSL, "/PSL_A%d_y PSL_A%d_y PSL_AH%d add def\n", annot_pos, annot_pos, annot_pos);
+			
 		}
 
 		if (nx) gmt_M_free (GMT, knots);
@@ -4404,7 +4459,6 @@ void gmt_xy_axis (struct GMT_CTRL *GMT, double x0, double y0, double length, dou
 	if (np) gmt_M_free (GMT, knots_p);
 
 	/* Finally do axis label */
-
 	if (A->label[0] && annotate && !gmt_M_axis_is_geo_strict (GMT, axis)) {
 		unsigned int far_ = !below;
 		char *this_label = (far_ && A->secondary_label[0]) ? A->secondary_label : A->label;	/* Get primary or secondary axis label */
@@ -4416,12 +4470,17 @@ void gmt_xy_axis (struct GMT_CTRL *GMT, double x0, double y0, double length, dou
 		PSL_command (PSL, "/PSL_L_y PSL_A0_y PSL_A1_y mx %d add %sdef\n", PSL_IZ (PSL, GMT->current.setting.map_label_offset), (neg == horizontal) ? "PSL_LH add " : "");
 		/* Move to new anchor point */
 		PSL_command (PSL, "%d PSL_L_y MM\n", PSL_IZ (PSL, 0.5 * length));
+		
+		AxisLable_Flip_GMT_X_Y(GMT);// X labbel: 官方版本中的对于x和y剖面切片的文字出现了镜像，所以这里只对x和y剖面进行翻转
 		if (axis == GMT_Y && A->label_mode) {
 			i = (below) ? PSL_MR : PSL_ML;
 			PSL_plottext (PSL, 0.0, 0.0, -GMT->current.setting.font_label.size, this_label, 0.0, i, form);
 		}
 		else
 			PSL_plottext (PSL, 0.0, 0.0, -GMT->current.setting.font_label.size, this_label, horizontal ? 0.0 : 90.0, PSL_BC, form);
+		
+		AxisLable_Flip_GMT_X_Y(GMT);//恢复翻转
+		
 	}
 	else
 		PSL_command (PSL, "/PSL_LH 0 def /PSL_L_y PSL_A0_y PSL_A1_y mx def\n");
@@ -7491,6 +7550,7 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 				{
 					printf("读取缓存文件失败\n");
 				}else{
+					// printf("3D view is currently fixed by gzk\n");
 					fscanf(fp,"%lf %lf",&GMT->current.proj.z_project.x_off,&GMT->current.proj.z_project.y_off);
 					fclose(fp);
 				}
@@ -7527,6 +7587,7 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 				{
 					printf("读取缓存文件失败\n");
 				}else{
+					// printf("3D view is currently fixed by gzk\n");
 					fscanf(fp,"%lf %lf",&GMT->current.proj.z_project.x_off,&GMT->current.proj.z_project.y_off);
 					fclose(fp);
 				}
@@ -7569,6 +7630,8 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 		PSL_command (PSL, "%s [%g %g %g %g %g %g] concat\n",
 			(GMT->current.proj.z_project.plane >= 0) ? "PSL_GPP setmatrix" : "/PSL_GPP matrix currentmatrix def",
 			a, b, c, d, e * PSL->internal.x2ix, f * PSL->internal.y2iy);
+		// PSL_command(PSL,"%%测试\n");
+		// PSL_command(PSL,"%% 投影参数 %d\t%f\t%f\n",plane%3,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 	}
 
 	/* Store value of plane */
