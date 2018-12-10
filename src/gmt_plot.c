@@ -318,12 +318,12 @@ void AxisLable_Flip_GMT_X_Y(struct GMT_CTRL *GMT)
 	// 另一个剖面貌似没问题
 	switch(GMT->current.proj.z_project.plane%3){
 		case GMT_Y:
-			// PSL_command(GMT->PSL,"%% Axislabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+			PSL_command(GMT->PSL,"%% Axislabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 			PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
 		break;
 		case GMT_X:
 			if(GMT->current.proj.z_project.view_azimuth>180){
-				// PSL_command(GMT->PSL,"%% Axislabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+				PSL_command(GMT->PSL,"%% Axislabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
 			}
 		break;
@@ -342,16 +342,38 @@ double AxisTickLabel_Flip_GMT_X_Y(struct GMT_CTRL *GMT,double angle_text)
 {
 	switch(GMT->current.proj.z_project.plane%3){
 		case GMT_Y:
-			// PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+		if(GMT->current.proj.z_project.view_azimuth>270 && GMT->current.proj.z_project.view_azimuth<360 ){
+			PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 			PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
 			angle_text-=180;  
+		}else if(GMT->current.proj.z_project.view_azimuth>90 && GMT->current.proj.z_project.view_azimuth<=270){
+				// PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+				// PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+				// angle_text-=180;  
+		}
+		else{  // 0<azimuth<=90
+			PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+			PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+			angle_text-=180;  
+		}
+		
+			
 		break;
 		case GMT_X:
-			if(GMT->current.proj.z_project.view_azimuth>180){
-				// PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+			// 顺时针旋转小于90度的情况
+			if(GMT->current.proj.z_project.view_azimuth>270 && GMT->current.proj.z_project.view_azimuth<360){
+				PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+				angle_text-=180;  
+			}else if(GMT->current.proj.z_project.view_azimuth>=235 && GMT->current.proj.z_project.view_azimuth<=270){
+				PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
+				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
+			}else if(GMT->current.proj.z_project.view_azimuth>90 && GMT->current.proj.z_project.view_azimuth<235) // 顺时针旋转大于等于90度的情况
+			{
+
+			}else{ //0<azimuth<=90
+				angle_text-=180;  
 			}
-			angle_text-=180;  
 		break;
 	}
 	return angle_text;  
