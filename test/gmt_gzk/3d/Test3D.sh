@@ -26,4 +26,4 @@ gmt end
 
 open $figname.pdf
 
-rm tmp* 
+rm tmp* gmt.conf gmt.history 

@@ -3,7 +3,7 @@ function plot_gmtset()
 {
     # --------------------figure set--------------------
     # gmt gmtset GMT_LANGUAGE=CN1
-    gmt gmtset PS_MEDIA=A1   #此选项在Modern模式下不支持
+    # gmt gmtset PS_MEDIA=A1   #此选项在Modern模式下不支持
     # 设置纬度标注与坐标轴平行，只对经纬度起作用，线性投影使用 --MAP_ANNOT_ORTHO=,,,,
     gmt set MAP_ANNOT_OBLIQUE 32
     # 
@@ -31,16 +31,25 @@ function figset()
     width_fig_x=10
     width_fig_y=10
     width_fig_z=7
+    # colorbar
+    x_colorbar=-0.8
+    y_colorbar=0.2
+    width_colorbar=5
     # alpha
-    alpha_profile=90
+    alpha_profile=50
     alpha_bathy=70    #地形上面的覆盖层的透明度
     # color
     color_profile=lightblue@$alpha_profile     #三维剖面颜色
+    color_secondaryProfile=gray
+    lc_segments=white
     # move
     move_x=0
     move_y=0
 }
-
+function datapath()
+{
+    path_segments_SWIR=/MyData/Research/2-Paper/4_Numerical_Longqi/data/segments/
+}
 function dataset()
 {
     xmin=0
@@ -52,22 +61,30 @@ function dataset()
     xc=`echo $xmin $xmax | awk '{print $1+($2-$1)/2}'`
     yc=`echo $ymin $ymax | awk '{print $1+($2-$1)/2}'`
     zc=`echo $zmin $zmax | awk '{print $1+($2-$1)/2}'`
+    len_z=`echo $zmin $zmax | awk '{print ($2-$1)}'`
     range_xy=$xmin/$xmax/$yminn/$ymax
     range_z=$zmin/$zmax
     range_xyz=$range_xy/$range_z
     # get bathymetry of a rigion
-    lon_min=49.5
-    lon_max=51.5
+    lon_min=49.4
+    lon_max=50.6
     lat_min=-38.1
-    lat_max=-36.9
-    scale_z=1  #z轴与横向的尺度比例，用于计算z轴的长度
+    lat_max=-37.1
+    len_lon=`echo $lon_min $lon_max | awk '{print ($2-$1)}'`
+    len_lat=`echo $lat_min $lat_max | awk '{print ($2-$1)}'`
+    scale_z=2  #z轴与横向的尺度比例，用于计算z轴的长度
     bathy=bathy_swir.nc
     bathycpt=bathy.cpt
     cpt_base=cpt-city/mpl/viridis
     cutBathy $bathy $cpt_base
+    range_LonZ=$lon_min/$lon_max/$zmin/$zmax
+    range_LatZ=$lat_min/$lat_max/$zmin/$zmax
     range_LonLatZ=$lon_min/$lon_max/$lat_min/$lat_max/$zmin/$zmax
     range_LonZLat=$lon_min/$lon_max/$zmin/$zmax/$lat_min/$lat_max
     range_LatZLon=$lat_min/$lat_max/$zmin/$zmax/$lon_min/$lon_max
+    # 生成数据
+    data_simu=tmp_data_simulation.nc
+    
 }
 function cutBathy()
 {
@@ -126,4 +143,17 @@ function preCompute()
     width_fig_z=`echo $width_fig_x $length_lon $length_z $scale_z | awk '{print $3/$2*$1*$4}'`
     echo "东西向(km):"$length_lon "南北向(km):"$length_lat "深度(km):"$length_z "宽(x方向):"$width_fig_x "长度(y方向): "$width_fig_y "高:"$width_fig_z 
     
+}
+
+function gausshill()
+{
+    # exp(-r/factor), r=(x-x0)^2+(y-y0)^2
+    range=$1
+    x0=$2
+    y0=$3
+    dxdy=$4
+    length_x=$5
+    length_y=$6
+    factor=10
+    gmt grdmath -R$range -I$dxdy X $x0 SUB $length_x DIV DUP Y $y0 SUB $length_y DIV EXCH HYPOT NEG $factor DIV EXP  = $data_simu
 }
