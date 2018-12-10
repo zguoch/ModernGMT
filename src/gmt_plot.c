@@ -365,10 +365,10 @@ double AxisTickLabel_Flip_GMT_X_Y(struct GMT_CTRL *GMT,double angle_text)
 				PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
 				angle_text-=180;  
-			}else if(GMT->current.proj.z_project.view_azimuth>=235 && GMT->current.proj.z_project.view_azimuth<=270){
+			}else if(GMT->current.proj.z_project.view_azimuth>180 && GMT->current.proj.z_project.view_azimuth<=270){
 				PSL_command(GMT->PSL,"%%Ticklabel 投影参数 %d\t%f\t%f\n",GMT->current.proj.z_project.plane,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 				PSL_command (GMT->PSL,"-1 1 scale\n");   //水平翻转：镜像
-			}else if(GMT->current.proj.z_project.view_azimuth>90 && GMT->current.proj.z_project.view_azimuth<235) // 顺时针旋转大于等于90度的情况
+			}else if(GMT->current.proj.z_project.view_azimuth>90 && GMT->current.proj.z_project.view_azimuth<=180) // 顺时针旋转大于等于90度的情况
 			{
 
 			}else{ //0<azimuth<=90
