@@ -72,7 +72,7 @@ function dataset()
     lat_max=-37.1
     len_lon=`echo $lon_min $lon_max | awk '{print ($2-$1)}'`
     len_lat=`echo $lat_min $lat_max | awk '{print ($2-$1)}'`
-    scale_z=2  #z轴与横向的尺度比例，用于计算z轴的长度
+    scale_z=3  #z轴与横向的尺度比例，用于计算z轴的长度
     bathy=bathy_swir.nc
     bathycpt=bathy.cpt
     cpt_base=cpt-city/mpl/viridis

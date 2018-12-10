@@ -86,4 +86,4 @@ gmt end
 open $figname.$fmt
 
 
-rm gmt.conf gmt.history tmp*
+# rm gmt.conf gmt.history tmp*
