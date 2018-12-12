@@ -90,38 +90,13 @@ function cutBathy()
 {
     etopo_save=$1
     incpt=$2
-    etopo1=/MyData/Research/0-Phd/Data/GlobalGeophysicalData/ETOPO1_Bed_g_gdal.nc
     range_lonlat=$lon_min/$lon_max/$lat_min/$lat_max 
-    gmt grdcut $etopo1 -R$range_lonlat -G$etopo_save
+    gmt grdcut ETOPO1.nc -R$range_lonlat -G$etopo_save
     gmt grdmath $etopo_save 0.001 MUL = $etopo_save
     # make cpt
     gmt grd2cpt $etopo_save -C$incpt -Z >$bathycpt
 }
-# dark theme
-function MonokaiTheme()
-{
-    gmt set PS_PAGE_COLOR=46/42/46
-    # gmt set FONT_ANNOT_PRIMARY=12p,Helvetica,white
-    gmt set FONT=,,white
-    gmt set MAP_DEFAULT_PEN=white
-    gmt set MAP_FRAME_PEN=thicker,white
-    gmt set MAP_TICK_PEN_PRIMARY=,white
-    # --------color set -------------------
-    # color_G_eq_lon=white             #经度地震分布点的填充颜色
-    # color_W_eq_lon=yellow               #经度剖面地震分布点的edge颜色
-    # color_G_eq_lat=orange               #纬度剖面地震分布点的填充颜色
-    # color_W_eq_lat=white                #纬度剖面地震分布点的edge颜色
-    # color_G_eq_sf=$color_G_eq_lon       #海底地震分布点的填充颜色
-    # color_W_eq_sf=$color_W_eq_lon       #海底地震分布点的edge颜色
-    # lc_brittle_ductile=MEDIUMVIOLETRED  #脆性-韧性转换带曲线的颜色
-    # color_profile=black@20              #主要剖面的颜色
-    # color_secondaryProfile=117/113/94    #次要剖面的颜色
-    # color_DF=249/38/114                  #DF曲线颜色
-    # color_fault=166/2226/46             #小断层颜色
-    # color_continent=black
 
-    figname=${figname}_DarkTheme
-}
 function preCompute()
 {
     # ======计算范围

@@ -2,6 +2,7 @@
 # Zhikui Guo, 2018-12-09, GEOMAR, Germany
 
 # 0. include some code segments
+. stdafx.sh
 . include.sh
 plot_gmtset
 # 0.1 figset
@@ -10,7 +11,7 @@ figset
 datapath
 dataset
 # 1. apply theme
-# MonokaiTheme
+MonokaiTheme
 
 # 2. 计算一些信息
 preCompute
@@ -19,15 +20,15 @@ preCompute
 figname=${figname}_geo
 # 新版本的gmt有时候psconvert转换pdf不成功，因此这里暂时先用png
 fmt=pdf
-gmt begin $figname $fmt
+gmt begin $figname $fmt,png
 
     # seafloor basemap
-    gmt psbasemap -JM$width_fig_x -JZ${width_fig_z}  -R$range_LonLatZ -Ba -BwsZ -Bza+l"Depth (m)" -pz$angle_view  -Tdj${prop_rose} --FONT_TITLE=12p --MAP_TITLE_OFFSET=0.1c 
-    # gmt grdgradient ${bathy} -Az$angle_view -G$bathy_azm=nb/a -Ne0.2
+    gmt psbasemap -JM$width_fig_x -JZ${width_fig_z}  -R$range_LonLatZ -Bxa20f20 -Bya20f20 -BwsZ -Bza+l"Depth (m)" -pz$angle_view  -Tdj${prop_rose} --FONT_TITLE=12p --MAP_TITLE_OFFSET=0.1c 
+    gmt grdgradient ${bathy} -Az$angle_view -G$bathy_azm=nb/a -Ne0.2
     gmt grdview ${bathy} -JZ -p -C$bathycpt -N${zmin}+g$color_profile@$alpha_profile -Qi -I$bathy_azm -t$alpha_bathy 
     # gmt makecpt -C128 -T-5,0 -N > tmp.cpt
     # gmt grdview ${bathy} -JZ -p -Ctmp.cpt -Qi -t$alpha_bathy 
-    gmt psscale -C$bathycpt -Dx$x_colorbar/$y_colorbar+w$width_colorbar/0.3c+h+jLB -Bxa2f0.4  -By+lkm  -V
+    gmt psscale -C$bathycpt -Dx$x_colorbar/$y_colorbar+w$width_colorbar/0.3c+h+jLB -Bxa2f0.4 --MAP_FRAME_PEN=1p  -By+lkm  -V
     # add text
     z_text=`echo 20 -22 | gmt grdtrack -G${bathy}| awk '{print $3}'`
     echo $z_text
@@ -43,9 +44,9 @@ gmt begin $figname $fmt
     awk 'NR==15 {print $1, $2-2, "SEIR"}' $path_MOR/SEIR.txt | gmt pstext -JZ -Z$z_text -p -F+f20p,Helvetica-Bold,red=thinner,white+jMC+a-30
     # add two profiles
     echo $lon_longqi $lat_min $lat_max | awk '{printf "%f %f\n%f %f\n", $1, $2, $1, $3}' | gmt sample1d -I5k -AR | gmt project -C$lon_longqi/$lat_min -Q |awk '{print $1, $2, $3}' >profile_lon.xyd
-    awk '{print $1, $2}' profile_lon.xyd |gmt grdtrack -G${bathy} |  gmt psxyz -JZ -p -W1,$color_profile 
+    awk '{print $1, $2}' profile_lon.xyd |gmt grdtrack -G${bathy} |  gmt psxyz -JZ -p -W1,green 
     echo $lat_longqi $lon_min $lon_max | awk '{printf "%f %f\n%f %f\n", $1, $2, $1, $3}' | gmt sample1d -I5k -AR |awk '{print $2, $1}'| gmt project -C$lon_min/$lat_longqi -Q |awk '{print $1, $2, $4}'>profile_lat.xyd 
-    awk '{print $1, $2}' profile_lat.xyd |gmt grdtrack -G${bathy} | gmt psxyz -JZ -p -W1,$color_profile 
+    awk '{print $1, $2}' profile_lat.xyd |gmt grdtrack -G${bathy} | gmt psxyz -JZ -p -W1,green 
     # 龙旗位置
     echo $lon_longqi $lat_longqi | gmt grdtrack -G${bathy} | gmt psxyz -JZ -p -Sa0.5c -Gred -W1.5,yellow  
     z_text=`echo $lon_longqi $lat_longqi |awk '{print $1, $2-5}' | gmt grdtrack -G${bathy}| awk '{print $3}'`
@@ -67,7 +68,7 @@ gmt begin $figname $fmt
     
     # # profile along lat
     width_fig_y0=`echo $width_fig_y | awk '{print $1+0.3}'`
-    gmt psbasemap -R$range_LatZLon -JX$width_fig_y0/$width_fig_z -JZ$width_fig_x -BS -Ba --MAP_ANNOT_OFFSET=$offset_ticklabel_lon  -px$angle_view/$pos_profile_lon
+    gmt psbasemap -R$range_LatZLon -JX$width_fig_y/$width_fig_z -JZ$width_fig_x -BS -Ba --MAP_ANNOT_OFFSET=$offset_ticklabel_lon  -px$angle_view/$pos_profile_lon
     ymin_profile_vel=`grdinfo $nc_profile_lon| grep "y_min" | awk '{print $3}'`
     ymax_profile_vel=`grdinfo $nc_profile_lon| grep "y_min" | awk '{print $5}'`
     xrange_profile_vel=$lat_min/$lat_max 
@@ -76,8 +77,8 @@ gmt begin $figname $fmt
     gmt grdimage tmp_vel.nc -Cvel.cpt -JZ -px$angle_view/$lon_min -t$alpha_profile
     gmt grdcontour tmp_vel.nc -C0.1 -JZ -p
     echo $latc $zc "SL2013sv Model"  | gmt pstext -JZ -p -F+f20p,Helvetica-Bold,$lc_segments=thinner,red+jMC+a0
-    gmt psscale -Cvel.cpt -Dx$x_colorbar_vel/$y_colorbar_vel+w$width_colorbar/0.3c+h+jRB -Bxa0.2f0.04  -By+lkm/s  -V
-    
+    gmt psscale -Cvel.cpt -Dx$x_colorbar_vel/$y_colorbar_vel+w$width_colorbar/0.3c+h+jRB -Bxa0.2f0.04 --MAP_FRAME_PEN=1p   -By+lkm/s  -V
+    add_logo 10.8 7 moderngmt -grid=false
 gmt end
 open $figname.$fmt
 

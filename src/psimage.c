@@ -175,6 +175,13 @@ GMT_LOCAL int parse (struct GMT_CTRL *GMT, struct PSIMAGE_CTRL *Ctrl, struct GMT
 							Ctrl->D.dim[GMT_X] = -Ctrl->D.dim[GMT_X];
 							Ctrl->D.interpolate = true;
 						}
+					}else if (gmt_get_modifier (Ctrl->D.refpoint->args, 'h', string)) {
+						printf("设置高度\n");
+						if ((n = gmt_get_pair (GMT, string, GMT_PAIR_DIM_NODUP, Ctrl->D.dim)) < 0) n_errors++;
+						if (Ctrl->D.dim[GMT_X] < 0.0) {	/* Negative width means PS interpolation */
+							Ctrl->D.dim[GMT_X] = -Ctrl->D.dim[GMT_X];
+							Ctrl->D.interpolate = true;
+						}
 					}
 					else if (gmt_get_modifier (Ctrl->D.refpoint->args, 'r', string))
 						Ctrl->D.dpi = atof (string);
@@ -268,7 +275,6 @@ GMT_LOCAL int parse (struct GMT_CTRL *GMT, struct PSIMAGE_CTRL *Ctrl, struct GMT
 					Ctrl->D.interpolate = true;
 				}
 				break;
-
 			default:	/* Report bad options */
 				n_errors += gmt_default_error (GMT, opt->option);
 				break;

@@ -127,7 +127,7 @@ function dataset()
     bathy_azm=bathy.azm
     cpt_base=cpt-city/mby/mby
     basecpt_vel=cpt-city/arendal/temperature
-    # cutBathy $bathy $cpt_base
+    cutBathy $bathy $cpt_base
     range_LonZ=$lon_min/$lon_max/$zmin/$zmax
     range_LatZ=$lat_min/$lat_max/$zmin/$zmax
     range_LonLatZ=$lon_min/$lon_max/$lat_min/$lat_max/$zmin/$zmax
@@ -143,7 +143,7 @@ function cutBathy()
     incpt=$2
     etopo1=/MyData/Research/0-Phd/Data/GlobalGeophysicalData/ETOPO1_Bed_g_gdal.nc
     range_lonlat=$lon_min/$lon_max/$lat_min/$lat_max 
-    gmt grdsample $etopo1 -R$range_lonlat -G$etopo_save -I1m
+    gmt grdsample ETOPO1.nc -R$range_lonlat -G$etopo_save -I10m
     gmt grdmath $etopo_save 0.001 MUL = $etopo_save
     # make cpt
     gmt grd2cpt $etopo_save -C$incpt -Z >$bathycpt

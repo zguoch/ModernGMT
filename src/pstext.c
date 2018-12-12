@@ -1156,21 +1156,21 @@ int GMT_pstext (void *V_API, int mode, void *args) {
 					c_font = gmt_M_memory (GMT, c_font, n_alloc, struct GMT_FONT);
 				}
 				c_angle[m] = T.paragraph_angle;
-				c_txt[m] = strdup (curr_txt);
-				c_x[m] = plot_x;
-				c_y[m] = plot_y;
-				c_just[m] = T.block_justify;
-				c_font[m] = T.font;
-				m++;
-			}
-			else {
-				// PSL_command(PSL,"%%绘制文字主控函数\n");
-				// Text_Flip_GMT_X_Y(GMT); //文字镜像翻转
-				PSL_plottext_mirror (Text_Flip_GMT_X_Y(GMT),PSL, plot_x, plot_y, T.font.size, curr_txt, T.paragraph_angle, T.block_justify, fmode);
-				// Text_Flip_GMT_X_Y(GMT); //恢复
-			}
-			if (Ctrl->A.active) T.paragraph_angle = save_angle;	/* Restore original angle */
-		}
+		c_txt[m] = strdup (curr_txt);
+		c_x[m] = plot_x;
+		c_y[m] = plot_y;
+		c_just[m] = T.block_justify;
+		c_font[m] = T.font;
+		m++;
+	}
+	else {
+		// PSL_command(PSL,"%%绘制文字主控函数\n");
+		// Text_Flip_GMT_X_Y(GMT); //文字镜像翻转
+		PSL_plottext_mirror (Text_Flip_GMT_X_Y(GMT),PSL, plot_x, plot_y, T.font.size, curr_txt, T.paragraph_angle, T.block_justify, fmode);
+		// Text_Flip_GMT_X_Y(GMT); //恢复
+	}
+	if (Ctrl->A.active) T.paragraph_angle = save_angle;	/* Restore original angle */
+}
 
 	} while (true);
 

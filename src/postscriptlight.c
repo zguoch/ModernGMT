@@ -4863,6 +4863,22 @@ int PSL_deftextdim (struct PSL_CTRL *PSL, const char *dim, double fontsize, char
 	return (sub_on|super_on|scaps_on|symbol_on|font_on|size_on|color_on|under_on);
 }
 
+/**
+ * @brief 将文字镜像翻转
+ * 
+ * Zhikui, 2018-12-12
+ * 
+ * @param isMirrow 
+ * @param PSL 
+ * @param x 
+ * @param y 
+ * @param fontsize 
+ * @param text 
+ * @param angle 
+ * @param justify 
+ * @param mode 
+ * @return int 
+ */
 int PSL_plottext_mirror (int isMirrow,struct PSL_CTRL *PSL, double x, double y, double fontsize, char *text, double angle, int justify, int mode) {
 	/* General purpose text plotter for single line of text.  For paragraphs, see PSL_plotparagraph.
 	* PSL_plottext positions and justifies the text string according to the parameters given.

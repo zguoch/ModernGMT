@@ -10,6 +10,8 @@ figset
 datapath
 dataset
 # 1. apply theme
+. stdafx.sh 
+. styles.sh
 MonokaiTheme
 
 # 2. 计算一些信息
@@ -19,7 +21,7 @@ preCompute
 figname=${figname}_geo
 # 新版本的gmt有时候psconvert转换pdf不成功，因此这里暂时先用png
 fmt=png
-gmt begin $figname $fmt
+gmt begin $figname $fmt,png
     gmt psbasemap -JM$width_fig_x -JZ${width_fig_z}  -R$range_LonLatZ -Ba -BwsenZ -Bza+l"Depth (m)" -pz$angle_view  -TdjBL+o-3.5c/4.5c+w2c+f+lW,,S, --FONT_TITLE=12p --MAP_TITLE_OFFSET=0.1c 
     gmt grdgradient ${bathy} -Az$angle_view -Gtmp.azm=nb/a -Ne0.2
     gmt grdview ${bathy} -JZ -p -C$bathycpt -N${zmin}+g$color_profile -Qi -Itmp.azm 
@@ -79,9 +81,9 @@ gmt begin $figname $fmt
     gmt grdimage -JZ tmp_data_clip.nc -Ctmp.cpt -Q -p -t10
     gmt psxy $polygon_profile -JZ -p -W0.5,black -L 
     echo "$latc $zc AMC" |gmt pstext -JZ -p -F+f15p,Helvetica-Bold,red=thinner,blue+jCM+a0 -Dj0c/0c
-    gmt psscale -Ctmp.cpt -Dx$x_colorbar/$y_colorbar+w$width_colorbar/0.3c+h+jLB -Bxa0.02f0.1  -By+lunit  -V
-    
-
+    gmt psscale -Ctmp.cpt -Dx$x_colorbar/$y_colorbar+w$width_colorbar/0.3c+h+jLB -Bxa0.02f0.1  -By+lunit --MAP_FRAME_PEN=1p -V
+    gmt colorbar -C$bathycpt -Dx$x_colorbar/9.8+w$width_colorbar/0.3c+h+m+jLB -Bxa0.5f0.1  -By+lkm --MAP_FRAME_PEN=1p
+    add_logo 12 10 moderngmt -grid=false
 gmt end
 open $figname.$fmt
 

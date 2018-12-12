@@ -309,6 +309,8 @@ GMT_LOCAL int gmt_get_ppid (struct GMT_CTRL *GMT) {
 /**
  * @brief 对-JZ -p参数形成的x，y剖面的文字进行镜像翻转
  * 
+ * Zhikui Guo, 2018-12-12, Germany
+ * 
  * 因为官方版本中的剖面文字是镜像的
  * 
  * 利用Postscript的scale命令，在文字之前写入 -1 1 scale，然后在文本之后再写一次，恢复翻转，以免对后面绘图命令的坐标旋转产生影响
@@ -329,8 +331,11 @@ void AxisLable_Flip_GMT_X_Y(struct GMT_CTRL *GMT)
 		break;
 	}
 }
+
 /**
  * @brief 切片剖面的坐标轴刻度标注文字镜像翻转
+ * 
+ * Zhikui Guo, 2018-12-12, Germany
  * 
  * 对于GMT_X的情况只对view_azimuth>180的情况操作；
  * 除了翻转外还有一个角度，官方版本中加了180度，会导致问题，这里减去180度
