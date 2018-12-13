@@ -5,7 +5,7 @@ ModernGMT是基于GMT官方开发版进行自定义新功能的私房版本。
 
 ## 安装方法
 
-1. [**从源码安装**](install.md)
+1. [![安装](https://img.shields.io/badge/源码-编译安装-orange.svg)](install.md)
 
 2. ![下载](https://img.shields.io/badge/二进制-安装包-orange.svg)   [![download](https://img.shields.io/badge/OSX-下载(制作中...)-green.svg)](www.modernfig.cn)  [![download](https://img.shields.io/badge/Windows-下载(制作中...)-green.svg)](www.modernfig.cn)  [![download](https://img.shields.io/badge/Linux-下载(制作中...)-green.svg)](www.modernfig.cn)
 
