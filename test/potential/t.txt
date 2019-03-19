@@ -1,0 +1,2 @@
+#lon lat azimuth, semi-major, semi-minor, height
+300	200	70	70	30	5000

@@ -1,0 +1,5 @@
+S 0.2i - 0.3i - 0.5p,- 0.5i FAA (at x = 0)
+S 0.2i c 0.05i red - 0.5i FAA (brute force)
+S 0.2i c 0.05i blue - 0.5i VGG (brute force)
+S 0.2i - 0.3i - 1.5p,red 0.5i FAA (Talwani)
+S 0.2i - 0.3i - 1.5p,darkgreen 0.5i VGG

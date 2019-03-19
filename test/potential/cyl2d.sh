@@ -8,7 +8,7 @@ R=1
 Z=3
 D=1000
 dx=0.25
-da=1
+da=1 
 echo "> $D" > cyl.txt
 gmt math -T0/360/$da -Ca T -C0 COSD $R MUL -C1 SIND $R MUL $Z ADD -Ca = >> cyl.txt
 # Theoretical FAA:

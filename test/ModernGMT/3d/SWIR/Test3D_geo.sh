@@ -11,7 +11,7 @@ figset
 datapath
 dataset
 # 1. apply theme
-MonokaiTheme
+# MonokaiTheme
 
 # 2. 计算一些信息
 preCompute

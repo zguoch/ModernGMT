@@ -24,7 +24,7 @@ function preset()
 }
 # 1. apply theme
 . styles.sh
-MonokaiTheme
+# MonokaiTheme
 # 常用代码头文件:绘制logo
 . stdafx.sh
 # 范围和颜色等设置

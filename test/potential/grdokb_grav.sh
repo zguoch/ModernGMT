@@ -23,3 +23,5 @@ gmt psxy tt.xyp -R -W0.5p -JM -O -K >> $ps
 
 # And computed profile
 paste tt.xyp tt.grv | gmt psxy -i2,5 -R0/165/80/360 -JX14c/8c -W1p -Ba -BWS -Y16c -O >> $ps
+
+open $ps

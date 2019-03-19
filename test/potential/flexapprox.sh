@@ -39,3 +39,5 @@ gmt psxy -R -J -O -K -Bafg10000 @flex_analytical.txt -i0,2 -Sc0.04i -Ggreen -Y4.
 gmt psxy -R -J -O -K @flex_analytical.txt -i0,3 -W0.25p >> $ps
 gmt psxy -R -J -O -K result.txt -i0,3+s$scale -W0.25p,red,- >> $ps
 gmt psxy -R -J -O -T >> $ps
+
+open $ps
