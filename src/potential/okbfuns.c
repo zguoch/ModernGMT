@@ -83,7 +83,7 @@ double okabe (struct GMT_CTRL *GMT, double x_o, double y_o, double z_o, double r
     |                                                                   |
     |  X,Y & Z are the coordinate arrays of the measure points          |
     |___________________________________________________________________| */
-
+	printf("\nnew face\n");
 	for (i = 0; i < bd_desc.n_f; i++) {	/* Loop over facets */
 		n_vert = bd_desc.n_v[i];	/* Number of vertices of each face */
 		if (n_vert < 3)
@@ -93,6 +93,8 @@ double okabe (struct GMT_CTRL *GMT, double x_o, double y_o, double z_o, double r
 			loc_or[l].x = body_verts[k].x - x_o;
 			loc_or[l].y = body_verts[k].y - y_o;
 			loc_or[l].z = body_verts[k].z - z_o;
+			// printf("face: %d; vert: %d; Coord: %.1f  %.1f  %.1f; x0: %.1f  y0: %.1f  z0: %.1f \n",
+			// i,l,body_verts[k].x,body_verts[k].y,body_verts[k].z,x_o,y_o,z_o);
 		}
 		rot_17 (n_vert, top, loc_or, &c_tet, &s_tet, &c_phi, &s_phi); /* rotate coords by eq (17) of okb */
 		okb += (is_grav) ? okb_grv (n_vert, loc_or, c_phi) :

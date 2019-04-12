@@ -3,7 +3,7 @@ cat << EOF > lines.txt
 0       0
 5       0
 EOF
-
+gmt gmtset PS_MEDIA A3
 gmt begin GMT_linecap ps
 gmt plot lines.txt -R-0.25/5.25/-0.2/1.4 -Jx1i -W4p 
 gmt plot lines.txt -Y0.2i -W4p,orange,. 
@@ -13,3 +13,4 @@ gmt plot lines.txt -Y0.2i -W4p,orange,0_8:0p --PS_LINE_CAP=round
 gmt plot lines.txt -Y0.2i -W4p,red,0_16:0p  --PS_LINE_CAP=round 
 gmt plot lines.txt -W2p,green,0_16:8p  --PS_LINE_CAP=round
 gmt end
+# open GMT_linecap.pdf

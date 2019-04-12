@@ -36,8 +36,8 @@ The Generic Mapping Tools
    at the GMT Developer Summit in La Jolla, California, during August 15--19, 2016.
 
 
-Acknowledgments
----------------
+致谢Acknowledgments
+-------------------------
 
 The Generic Mapping Tools (GMT) could not have been designed without
 the generous support of several people. The Founders (Wessel and Smith)

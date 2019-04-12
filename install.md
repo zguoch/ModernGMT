@@ -173,3 +173,10 @@ make -j
 
 > 如果发现在终端不能直接用`gmt`命令，每次在终端输入gmt会出现这个错误：`fatal: Not a git repository (or any of the parent directories): .git`，那是因为安装了git的插件的原因。一般这个是由于on my zsh引起的，gmt这个词被定义为了 **alias g./home/zguo/.oh-my-zsh/plugins/git/git**，定义的文件为:`/home/zguo/.oh-my-zsh/plugins/git/git.plugin.zsh`，找到这个文件打开之后把这一行注释掉，然后重新source一下或者重新打开一下终端就好了。
 **Mac系统下也是一样的操作！**
+
+## 生成pdf文档时注意
+
+1. GSHHG目录没有设置正确，则无法在doc_modern/scripts下正确生成GMT_inset.ps, GMT_App_K_1.ps和GMT_App_K_2.ps，从而会导致最终latex生成失败，因为这两个ps对应的pdf文件无法找到。
+   解决办法：可以手动将GSHHG的文件目录加入到build/src/config.h的GSHHG_PATH宏定义中。虽然可以生成ps文件了，但是转换为pdf过程中依然存在问题，不知为什么。
+   解决办法：用JL投影代替JM投影
+2. doc_modern/scripts 目录下的GMT_lineoffset.sh和GMT_linearrow.sh两个文件中使用了-JM投影，但是不知为何会导致无法将ps格式转换为pdf，只好将投影改为-JX则通过

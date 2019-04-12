@@ -67,10 +67,10 @@
 #define PSL_LIB_NAME "@PSL_LIB_NAME@"
 
 /* Name of DCW path */
-#define DCW_INSTALL_PATH "@DCW_PATH@"
+#define DCW_INSTALL_PATH "/Users/zguo/opt/dcw-gmt-1.1.4"
 
 /* Name of GSHHG path */
-#define GSHHG_INSTALL_PATH "@GSHHG_PATH@"
+#define GSHHG_INSTALL_PATH "/Users/zguo/opt/gshhg-gmt-2.3.7"
 
 /* Default units (SI vs US) */
 #define GMT_DEF_UNITS "@UNITS@"

@@ -14,6 +14,7 @@ EOF
 # 2. LL Map: Bathymetry load + flexural contours
 gmt makecpt -Crainbow -T-5000/-1000 > z.cpt
 gmt grdimage z.nc -Cz.cpt -JX3i -P -Ba -BWSne -K -Y0.75i > $ps
+echo "Bathymetry+Flexure" | gmt pstext -R -J -F+cTL -Gwhite -O -K >>$ps 
 gmt makecpt -Crainbow -T-50/250 > g.cpt
 
 # Compute flexure and overlay on bathymetry
@@ -23,15 +24,17 @@ gmt grdcontour moho_flex.nc -J -O -K -C100 -A500 >> $ps
 # 3. LR Map: Gravity from flexure of Moho only
 gmt gravfft moho_flex.nc+uk -Ff -E$order -D500 -N+a -Gfaa_flex.nc
 gmt grdimage faa_flex.nc -Cg.cpt -J -O -K -Ba -BWSne -X3.5i >> $ps
+echo "Gravity from Flexure" | gmt pstext -R -J -F+cTL -Gwhite -O -K >>$ps 
 
 # 4. ML Map: Gravity from seamounts only
 gmt gravfft z.nc+uk -Ff -E$order -D1800 -N+a -Gfaa_z.nc
 gmt grdimage faa_z.nc -Cg.cpt -J -O -K -Ba -BWsne -X-3.5i -Y3.25i >> $ps
-
+echo "Gravity from Seamount" | gmt pstext -R -J -F+cTL -Gwhite -O -K >>$ps 
 # 5. MR Map: Total gravity model + 0.5 mGal noise
 #gmt grdmath -Rfaa_flex.nc 0 0.5 NRAND = faa_noise.nc
 gmt grdmath faa_flex.nc faa_z.nc ADD @faa_noise.nc ADD = faa_total.nc
 gmt grdimage faa_total.nc -Cg.cpt -J -O -K -Ba -BWsne -X3.5i >> $ps
+echo "Total Gravity+0.5 mGal noise" | gmt pstext -R -J -F+cTL -Gwhite -O -K >>$ps 
 
 # Compute admittance, both data and theoretical, and coherence between topo and gravity
 gmt gravfft z.nc+uk faa_total.nc+uk -N+d -Iwkt -Ff -Z12000 -T12000/2800/3300/1000 > adm_t.txt
@@ -46,3 +49,7 @@ gmt psxy adm.txt -R8/512/0/70 -J -O -Bxa2g3 -Byaf+l"Admittance (mGal/km)" -BE -S
 gmt psxy adm.txt -R -J -O -K  -W0.5p,blue -i0,11+s1000 >> $ps
 gmt psxy adm_t.txt -R -J -O -K -W0.5p,green -i0,3+s1000 >> $ps
 gmt psxy -R -J -O -T >> $ps
+
+
+gmt psconvert $ps -Tf -Au 
+open admittance.pdf

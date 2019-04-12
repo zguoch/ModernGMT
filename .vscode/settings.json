@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.geo": "cpp",
+        "*.rst": "markdown",
+        "gmt_dev.h": "c"
+    }
+}
