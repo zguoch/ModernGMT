@@ -1,36 +1,36 @@
 .. index:: ! coast
 
-*******
-coast
-*******
+*********************
+coast(海岸线)
+*********************
 
 .. only:: not man
 
-    Plot continents, shorelines, rivers, and borders on maps
+    在地图上绘制陆地、海岸线、河流和其他边界
 
-Synopsis
+概要
 --------
 
 .. include:: common_SYN_OPTs.rst_
 
-**gmt coast** |-J|\ *parameters*
+**gmt coast** |-J|\ *参数*
 |SYN_OPT-R|
-[ |-A|\ *area* ]
+[ |-A|\ *面积* ]
 [ |SYN_OPT-B| ]
-[ |-C|\ [**l**\ \|\ **r**/]\ *fill* ]
-[ |-D|\ *resolution*\ [**+**] ]
+[ |-C|\ [**l**\ \|\ **r**/]\ *填充* ]
+[ |-D|\ *分辨率*\ [**+**] ]
 [ |-E|\ *dcw* ]
 [ |-F|\ *box* ]
-[ |-G|\ *fill*\ \|\ **c** ]
-[ |-I|\ *river*\ [/\ *pen*] ]
-[ |-J|\ **z**\ \|\ **Z**\ *parameters* ]
-[ |-L|\ *scalebar* ]
+[ |-G|\ *填充*\ \|\ **c** ]
+[ |-I|\ *河流*\ [/\ *画笔*] ]
+[ |-J|\ **z**\ \|\ **Z**\ *参数* ]
+[ |-L|\ *比例尺标* ]
 [ |-M| ]
-[ |-N|\ *border*\ [/*pen*] ]
+[ |-N|\ *边界*\ [/*画笔*] ]
 [ |-Q| ]
-[ |-S|\ *fill*\ \|\ **c** ]
-[ |-T|\ *rose* ]
-[ |-T|\ *mag_rose* ]
+[ |-S|\ *填充*\ \|\ **c** ]
+[ |-T|\ *玫瑰标* ]
+[ |-T|\ *玫瑰方向标* ]
 [ |SYN_OPT-U| ]
 [ |SYN_OPT-V| ]
 [ |-W|\ [*level*/]\ *pen* ]
@@ -43,7 +43,7 @@ Synopsis
 
 |No-spaces|
 
-Description
+描述
 -----------
 
 **coast** plots grayshaded, colored, or textured land-masses [or
@@ -61,7 +61,7 @@ earlier graphics drawn in those areas will not be overwritten).
 Likewise, if the water-areas are painted and no land fill is set then
 the land-areas will be transparent. A map projection must be supplied.
 
-Required Arguments
+必须参数
 ------------------
 
 .. _-J:
@@ -77,7 +77,7 @@ Required Arguments
 .. |Add_-Rz| unicode:: 0x20 .. just an invisible code
 .. include:: explain_-Rz.rst_
 
-Optional Arguments
+可选参数
 ------------------
 
 .. _-A:

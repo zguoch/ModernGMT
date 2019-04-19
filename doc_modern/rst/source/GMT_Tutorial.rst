@@ -30,68 +30,52 @@
 
 **Alfred Wegener Institute, Germany**
 
-Introduction
+简介
 ============
 
-The purpose of this tutorial is to introduce new users to GMT,
-outline the GMT environment, and enable you to make several
-forms of graphics without having to know too much about UNIX
-and UNIX tools.  We will not be able to cover all aspects of
-GMT nor will we necessarily cover the selected topics in
-sufficient detail.  Nevertheless, it is hoped that the exposure
-will prompt the users to improve their GMT and UNIX skills
-after completion of this short tutorial.
+本教程的目的是向新用户介绍GMT软件的绘图环境、原理，
+让你在不需要懂很多UNIX命令的情况下绘制出很多美观的论文插图。
+本教程不会涉及到GMT的方方面面，但是希望用户在看完这个简单教程之后，
+对GMT绘图和UNIX技能有一个更高层次的把握。
 
-GMT overview: History, philosophy, and usage
+
+GMT 简介: 历史、哲学和使用
 --------------------------------------------
 
-Historical highlights
+历史性事件
 ~~~~~~~~~~~~~~~~~~~~~
 
-The GMT system was initiated in late 1987 at Lamont-Doherty
-Earth Observatory, Columbia University by graduate students Paul
-Wessel and Walter H. F. Smith.  Version 1 was officially introduced
-to Lamont scientists in July 1988.  GMT 1 migrated by word of mouth
-(and tape) to other institutions in the United States, UK, Japan, and
-France and attracted a small following.  Paul took a Post-doctoral
-position at SOEST in December 1989 and continued the GMT development.
-Version 2.0 was released with an article in EOS, October 1991, and
-quickly spread worldwide.
-Version 3.0 in 1993 which was released with another article in EOS
-on August 15, 1995.  A major upgrade to GMT 4.0 took place in Oct 2004.
-Finally, in 2013 we released the new GMT 5 series and we have updated this tutorial
-to reflect the changes in style and syntax.  However, GMT 5 is generally
-backwards compatible with GMT 4 syntax.
-GMT is used by tens of thousands of users worldwide in a broad range of disciplines.
+GMT系统是哥伦比亚大学-Lamont-Doherty地球天文台的研究生Paul
+Wessel 和 Walter H. F. Smith于1987年开始创建。
+于1988年将GMT第一个版本正式介绍给Lamont的科学家。
+随后通过口头(和磁带)将GMT第一个版本传播到美国、英国、日本和法国的一些研究机构，并且吸引了一小部分追随者。
+1989年12月，Paul在SOEST做博士后并继续GMT的开发。
+1991年10月，在EOS的一篇文章上发布了GMT 2.0，并且迅速传向世界各地。
+1993年，在另一篇EOS文章上发布了GMT 3.0 (出版日期是1995年8月15日)。
+2004年10月迎来了GMT的主要更新，至4.0版本。
+最终，在2013年发布了最新的GMT 5系列。
+GMT 5一般是可以反向兼容GMT 4的语法的。
+GMT在世界范围内有来自多学科的好几万用户。
 
-
-Philosophy
+哲学
 ~~~~~~~~~~
 
-GMT follows the UNIX philosophy in which complex tasks are broken
-down into smaller and more manageable components.  Individual GMT
-modules are small, easy to maintain, and can be used as any other
-UNIX tool.  GMT is written in the ANSI C programming language
-(very portable), is POSIX compliant, and is independent of
-hardware constraints (e.g., memory).  GMT was deliberately written
-for command-line usage, not a windows environment, in order to
-maximize flexibility.  We standardized early on to use PostScript output
-instead of other graphics formats.  Apart from the built-in support for
-coastlines, GMT completely decouples data retrieval from the main
-GMT modules.  GMT uses architecture-independent file formats.
+GMT是继承了UNIX哲学：将很复杂的任务拆分成更小的更容易控制的单元。
+单个的GMT模块是比较小的且比较容易维护的，也可以用作其他任何的UNIX工具。
+GMT是用C语言编写的，最终形成一系列命令行程序，这样会大大增加其使用的灵活性。
+GMT输出的是PostScript矢量图形文件，可以方便的转换为其他图形格式。
 
-GMT installation considerations
+GMT 安装
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-See the GMT wiki for how to install GMT.  In addition, we recommend
-access to a PostScript previewer (e.g., gv (or ghostview or plain ghostscript)),
-and any flavor of the UNIX operating system (UNIX, Linux, OS X, Cygwin, MinGW, etc.).
-We do not recommend using the DOS command window under Windows.
+安装过程参见 `Mac系统下源码编译安装GMT`_ 和 `在ubuntu下编译安装gmt`_.
 
-Session One
+Windows系统下推荐直接下载官方的安装包双击即可安装。
+
+第一讲
 ===========
 
-Tutorial setup
+课程设置
 --------------
 
 #. We assume that GMT has been properly and fully
@@ -168,8 +152,8 @@ you need to be aware of at run-time.
    GMT parameters via the *--PAR=value* technique, and supply module options.  Some GMT modules
    will read hidden data (like coastlines) but most will explicitly need to be given user data.
 
-Input data
-~~~~~~~~~~
+输入数据
+~~~~~~~~~~~~~~~~~~~~
 
 A GMT module may or may not take input files.  Three different
 types of input are recognized (more details can be found in Appendix
@@ -216,8 +200,8 @@ GMT modules may get operational parameters from several places:
 
 #. May use hidden support data like coastlines or PostScript patterns.
 
-Output data
-~~~~~~~~~~~
+输出数据
+~~~~~~~~~~~~~~~~~~~~~
 
 There are 6 general categories of output produced by GMT:
 
@@ -243,8 +227,8 @@ the relationships shown in Figure :ref:`GMT Environment <gmt_environ>` .
 The UNIX Environment: Entry Level Knowledge
 -------------------------------------------
 
-Redirection
-~~~~~~~~~~~
+重定向
+~~~~~~~~~~~~~~~~~~~~~
 
 Most GMT modules read their input from the terminal (called
 *stdin*) or from files, and write their output to the
@@ -1838,3 +1822,11 @@ Exercises:
 #. Redo :doc:`grdgradient` with another illumination direction and plot again.
 
 #. Select a higher *dpi*, e.g., 200.
+
+
+
+
+
+.. _Mac系统下源码编译安装GMT: https://www.jianshu.com/p/d86ce50ba547
+
+.. _在ubuntu下编译安装gmt: https://www.jianshu.com/p/bafe23845906

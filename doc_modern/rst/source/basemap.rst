@@ -6,23 +6,23 @@ basemap
 
 .. only:: not man
 
-    Plot base maps and frames
+    绘制底图和框架
 
-Synopsis
+概要
 --------
 
 .. include:: common_SYN_OPTs.rst_
 
-**gmt basemap** |-J|\ *parameters*
+**gmt basemap** |-J|\ *参数*
 |SYN_OPT-Rz|
 [ |SYN_OPT-B| ]
-[ |-A|\ [*file*] ]
+[ |-A|\ [*文件*] ]
 [ |-D|\ *inset box* ]
-[ |-F|\ *box* ]
-[ |-J|\ **z**\ \|\ **Z**\ *parameters* ]
-[ |-L|\ *scalebar* ]
+[ |-F|\ *框* ]
+[ |-J|\ **z**\ \|\ **Z**\ *参数* ]
+[ |-L|\ *比例尺条* ]
 [ |SYN_OPT-U| ]
-[ |-T|\ *rose* ]
+[ |-T|\ *玫瑰标* ]
 [ |-T|\ *mag_rose* ]
 [ |SYN_OPT-V| ]
 [ |SYN_OPT-X| ]
@@ -34,16 +34,14 @@ Synopsis
 
 |No-spaces|
 
-Description
+描述
 -----------
 
-**basemap** creates a basic or fancy basemap with axes, fill, and titles.
-Several map projections are available, and the user may specify separate
-tick-mark intervals for boundary annotation, ticking, and [optionally]
-gridlines. A simple map scale or directional rose may also be plotted.
-At least one of the options **-B**, **-L**, or **-T** must be specified.
+**basemap** 创建一个带有坐标轴、填充色和标题的底图。
+有很多地图投影可供选择，并且用户可以指定坐标轴刻度、标注文字以及网格线的间隔。
+也可以再底图中添加比例尺或者代表方向的玫瑰标志，通过选项 **-B**, **-L**, or **-T** 其中一项来指定。
 
-Required Arguments
+必须参数
 ------------------
 
 .. _-J:
@@ -59,17 +57,16 @@ Required Arguments
 .. |Add_-Rz| unicode:: 0x20 .. just an invisible code
 .. include:: explain_-Rz.rst_
 
-Optional Arguments
+可选参数
 ------------------
 
 .. _-A:
 
-**-A**\ [*file*]
-    No plotting is performed.  Instead, we determine the geographical coordinates of the polygon outline
-    for the (possibly oblique) rectangular map domain.  The plot domain must be given via
-    **-R** and **-J**, with no other options allowed. The sampling interval is controlled via
-    :ref:`MAP_LINE_STEP <MAP_LINE_STEP>` parameter. The coordinates are written to *file* or to standard output if no file
-    is specified.
+**-A**\ [*文件*]
+    此命令并非一个绘图命令，而是确定矩形（有可能是斜的）地图区域多边形轮廓的地理坐标。
+    绘图区域必须通过
+    **-R** and **-J** 指定，不允许其他选项。采样间隔通过
+    :ref:`MAP_LINE_STEP <MAP_LINE_STEP>` 参数指定。然后将坐标写入 *file* 或在没有指定文件的情况下输出到标准输出端。
 
 .. _-B:
 

@@ -180,3 +180,8 @@ make -j
    解决办法：可以手动将GSHHG的文件目录加入到build/src/config.h的GSHHG_PATH宏定义中。虽然可以生成ps文件了，但是转换为pdf过程中依然存在问题，不知为什么。
    解决办法：用JL投影代替JM投影
 2. doc_modern/scripts 目录下的GMT_lineoffset.sh和GMT_linearrow.sh两个文件中使用了-JM投影，但是不知为何会导致无法将ps格式转换为pdf，只好将投影改为-JX则通过
+
+## 中文文档
+
+为了使用ctexbook类，在生成的latex目录下，将sphinxmanual.cls中的 `\LoadClass{\sphinxdocclass}` 替换为 `\LoadClass[a4paper,openany,UTF8,zihao=-4,scheme=plain]{ctexbook}` ，然后就可以用ctexset设置章节标题格式等。
+对于不同的.tex文件，就设置对应的.cls文件中的loadclass。

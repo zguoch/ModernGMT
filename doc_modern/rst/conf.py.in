@@ -203,6 +203,41 @@ tex_preamble = r"""
 \frenchspacing % use a standard word space between sentences
 \fvset{fontsize=\scriptsize} % verbatim font size
 \usepackage{ctex} %support Chinese 支持中文
+\def\gmtfontsize#1#2{%
+	\expandafter\newcommand\csname #1\endcsname[1][1.3]{%
+		\fontsize{#2}{##1\dimexpr #2}\selectfont}}
+\gmtfontsize{chuhao}{42pt}
+\gmtfontsize{xiaochu}{36pt}
+\gmtfontsize{yihao}{26pt}
+\gmtfontsize{xiaoyi}{24pt}
+\gmtfontsize{erhao}{22pt}
+\gmtfontsize{xiaoer}{18pt}
+\gmtfontsize{sanhao}{16pt}
+\gmtfontsize{xiaosan}{15pt}
+\gmtfontsize{sihao}{14pt}
+% 中文设置: 注意需要在相应的.cls(e.g. sphinxmanual.cls)文件中将`\LoadClass{\sphinxdocclass}` 替换为 `\LoadClass[a4paper,openany,UTF8,zihao=-4,scheme=plain]{ctexbook}`
+\ctexset{%
+	chapter/name={第,章},
+	chapter/number=\chinese{chapter},
+	appendixname=附录,
+	contentsname={目\hspace{\ccwd}录},
+	listfigurename=插图索引,
+	listtablename=表格索引,
+	figurename=图,
+	tablename=表,
+	bibname=参考文献,
+	indexname=索引,
+		chapter={
+			afterindent=true, 
+			beforeskip={9pt},
+			aftername=\hskip\ccwd,
+			afterskip={24pt},
+			% 章标题字体设置
+			format={\centering\heiti\xiaoer},
+			nameformat=\relax,
+			titleformat=\centering\heiti\xiaoer,
+		}
+}
 """
 
 # The paper size ('a4paper' or 'letterpaper') and font size.

@@ -1,17 +1,14 @@
 .. _-J_full:
 
-**-J**\ *parameters*
+**-J**\ *参数*
 
-Select map projection. The following character determines the
-projection. If the character is upper case then the argument(s) supplied
-as scale(s) is interpreted to be the map width (or axis lengths), else
-the scale argument(s) is the map scale (see its definition for each
-projection). UNIT is cm, inch, or point, depending on the
-:ref:`PROJ_LENGTH_UNIT <PROJ_LENGTH_UNIT>` setting in **gmt.conf**, but this can be
-overridden on the command line by appending **c**, **i**, or **p** to
-the *scale* or *width* values. Append **h**, **+**, or **-** to the
-given *width* if you instead want to set map height, the maximum
-dimension, or the minimum dimension, respectively [Default is **w** for width].
+选择地图投影。下列的字母指定了投影方式。 
+如果字母是大写的，则支持的参数被解释为地图宽度（或坐标轴长度）；
+否则，尺度参数表示地图比例尺。(见每个投影的定义)。
+单位是cm, inch, 或 point, 取决于 **gmt.conf** 中的
+:ref:`PROJ_LENGTH_UNIT <PROJ_LENGTH_UNIT>` 设置, 但是可以通过命令行中附加 **c**, **i**, 或 **p** 覆盖此设置而直接指定
+地图的 *scale* 或者 *width* 值的单位。在 *width* 后附加 **h**, **+**, 或 **-** 分别用于指定地图的高度、最大维度或最小维度。
+[默认 **w** 表示宽度]。
 In case the central meridian is an optional parameter and it is being
 omitted, then the center of the longitude range given by the **-R**
 option is used. The default standard parallel is the equator.
