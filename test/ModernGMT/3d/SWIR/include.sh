@@ -162,6 +162,19 @@ function MonokaiTheme()
 
     figname=${figname}_DarkTheme
 }
+function DarkTheme()
+{
+    gmt set PS_PAGE_COLOR=black
+    # gmt set FONT_ANNOT_PRIMARY=12p,Helvetica,white
+    gmt set FONT=,,white
+    gmt set MAP_DEFAULT_PEN=white
+    gmt set MAP_FRAME_PEN=thicker,white
+    gmt set MAP_TICK_PEN_PRIMARY=,white
+    # --------color set -------------------
+    lc_segments=gray
+
+    figname=${figname}_DarkTheme
+}
 function preCompute()
 {
     # ======计算范围

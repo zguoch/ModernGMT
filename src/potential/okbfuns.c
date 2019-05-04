@@ -83,7 +83,7 @@ double okabe (struct GMT_CTRL *GMT, double x_o, double y_o, double z_o, double r
     |                                                                   |
     |  X,Y & Z are the coordinate arrays of the measure points          |
     |___________________________________________________________________| */
-	printf("\nnew face\n");
+	// printf("\nnew face\n");
 	for (i = 0; i < bd_desc.n_f; i++) {	/* Loop over facets */
 		n_vert = bd_desc.n_v[i];	/* Number of vertices of each face */
 		if (n_vert < 3)
