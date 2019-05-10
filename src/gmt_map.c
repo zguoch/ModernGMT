@@ -5967,21 +5967,37 @@ GMT_LOCAL int map_init_three_D (struct GMT_CTRL *GMT) {
 	}
 
 	if (!GMT->current.proj.three_D) easy = true;
-
 	GMT->current.proj.z_project.xmin = GMT->current.proj.z_project.ymin = DBL_MAX;
 	GMT->current.proj.z_project.xmax = GMT->current.proj.z_project.ymax = -DBL_MAX;
-
 	if (easy) {
 		double xx[4], yy[4];
-
+		// The projected range of the third dimension can be accessed from GMT->current.proj.zmin and GMT->current.proj.zmax
 		xx[0] = xx[3] = GMT->current.proj.rect[XLO]; xx[1] = xx[2] = GMT->current.proj.rect[XHI];
 		yy[0] = yy[1] = GMT->current.proj.rect[YLO]; yy[2] = yy[3] = GMT->current.proj.rect[YHI];
-
+		// which plane in 3d projection
+		int plane = GMT->current.proj.z_project.view_plane;
+		// the offset coefficenece of transformation matrix: e and e should be keep consistent with the case of GMT_Z
+		switch (plane % 3) {
+			case GMT_X:
+				// -Rymin/ymax/zmin/zmax/xmin/xmax
+				xx[0] = xx[3] = GMT->current.proj.zmin; xx[1] = xx[2] = GMT->current.proj.zmax;
+				yy[0] = yy[1] = GMT->current.proj.rect[XLO]; yy[2] = yy[3] = GMT->current.proj.rect[XHI];
+				break;
+			case GMT_Y:
+				// -Rxmin/xmax/zmin/zmax/ymin/ymax
+				xx[0] = xx[3] = GMT->current.proj.rect[XLO]; xx[1] = xx[2] = GMT->current.proj.rect[XHI];
+				yy[0] = yy[1] = GMT->current.proj.zmin; yy[2] = yy[3] = GMT->current.proj.zmax;
+				break;
+			case GMT_Z:
+				// -Rxmin/xmax/ymin/ymax/zmin/zmax
+				xx[0] = xx[3] = GMT->current.proj.rect[XLO]; xx[1] = xx[2] = GMT->current.proj.rect[XHI];
+				yy[0] = yy[1] = GMT->current.proj.rect[YLO]; yy[2] = yy[3] = GMT->current.proj.rect[YHI];
+				break;
+		}
 		for (i = 0; i < 4; i++) {
 			gmt_xy_to_geo (GMT, &GMT->current.proj.z_project.corner_x[i], &GMT->current.proj.z_project.corner_y[i], xx[i], yy[i]);
 			gmt_xyz_to_xy (GMT, xx[i], yy[i], gmt_z_to_zz(GMT, GMT->common.R.wesn[ZLO]), &x, &y);
 			GMT->current.proj.z_project.xmin = MIN (GMT->current.proj.z_project.xmin, x);
-			// printf("第一类z_project.xmin计算: %f,   %f, %f\n",xx[i], yy[i],gmt_y_to_yy(GMT, GMT->common.R.wesn[ZLO]));
 			GMT->current.proj.z_project.xmax = MAX (GMT->current.proj.z_project.xmax, x);
 			GMT->current.proj.z_project.ymin = MIN (GMT->current.proj.z_project.ymin, y);
 			GMT->current.proj.z_project.ymax = MAX (GMT->current.proj.z_project.ymax, y);
@@ -6094,7 +6110,7 @@ GMT_LOCAL int map_init_three_D (struct GMT_CTRL *GMT) {
 		}
 		GMT->current.proj.z_project.x_off = GMT->current.proj.z_project.view_x - x;
 		GMT->current.proj.z_project.y_off = GMT->current.proj.z_project.view_y - y;
-		// printf("第一类x_off, y_off计算: %f,   %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
+		printf("第一类x_off, y_off计算: %f,   %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
 	}
 	else {
 		GMT->current.proj.z_project.x_off = -GMT->current.proj.z_project.xmin;
@@ -6102,7 +6118,7 @@ GMT_LOCAL int map_init_three_D (struct GMT_CTRL *GMT) {
 		// printf("第二类x_off, y_off计算: %f,   %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
 
 	}
-
+	
 	/* Adjust the xmin/xmax and ymin/ymax because of xoff and yoff */
 	GMT->current.proj.z_project.xmin += GMT->current.proj.z_project.x_off;
 	GMT->current.proj.z_project.xmax += GMT->current.proj.z_project.x_off;

@@ -23,10 +23,10 @@ function preset()
     len_z=`echo $zmin $zmax | awk '{print ($2-$1)}'`
 }
 # 1. apply theme
-. styles.sh
+# . styles.sh
 # MonokaiTheme
 # 常用代码头文件:绘制logo
-. stdafx.sh
+# . stdafx.sh
 # 范围和颜色等设置
 preset
 
@@ -41,7 +41,7 @@ gmt begin $figname pdf,png
     gmt basemap -JX$width_fig_x/$width_fig_z -JZ$width_fig_y -R$xmin/$xmax/$zmin/$zmax/$ymin/$ymax -Ba -BwSenz+glightgreen@$alpha_profile -Bx+l"X(m)" --MAP_FRAME_PEN=1,black@0 --MAP_ANNOT_OFFSET=-0.2  -py$angle_view/$ymax
     echo "$xc $zc xminn plane" | gmt pstext -JZ -p -F+f20p,Helvetica-Bold,blue=thinner,white+jCM+a-45 -Dj0c/0c
     # 使用logo
-    add_logo 0 0.5 moderngmt -grid=false 
+    # add_logo 0 0.5 moderngmt -grid=false 
 gmt end
 open $figname.pdf
 rm tmp* gmt.conf gmt.history 

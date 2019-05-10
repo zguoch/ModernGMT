@@ -7575,69 +7575,16 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 				b = -GMT->current.proj.z_project.cos_az * GMT->current.proj.z_project.sin_el;
 				c = 0.0;
 				d = GMT->current.proj.z_project.cos_el;
-				// printf("YZ平面: 重新计算之前xoff: %f   yoff: %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
-				
-				// GMT->current.proj.z_project.x_off=2.734875;
-				// GMT->current.proj.z_project.y_off=2.099742;
-				// FILE* fp=NULL;
-				fp=fopen("tmp_x_off_y_off.txt","r");
-				if(!fp)
-				{
-					printf("读取缓存文件失败\n");
-				}else{
-					// printf("3D view is currently fixed by gzk\n");
-					fscanf(fp,"%lf %lf",&GMT->current.proj.z_project.x_off,&GMT->current.proj.z_project.y_off);
-					fclose(fp);
-				}
-				// printf("YZ平面: 重新计算之后xoff: %f   yoff: %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
-				
 				e = GMT->current.proj.z_project.x_off - level * GMT->current.proj.z_project.cos_az;
 				f = GMT->current.proj.z_project.y_off - level * GMT->current.proj.z_project.sin_az * GMT->current.proj.z_project.sin_el;
-				// printf("YZ平面: xoff: %f   yoff: %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
-				// ============================================
-				// double x,y;
-				// double xx[4], yy[4];
-				
-				// ============================================
-				// fp=fopen("tmp.txt","r");
-				// if(!fp)
-				// {
-				// 	printf("读取缓存文件失败\n");
-				// }else{
-				// 	// fscanf(fp,"%lf %lf",&e,&f);
-				// 	fclose(fp);
-				// }
-				// printf("YZ平面 a: %f b: %f c: %f d: %f e: %f  f: %f\n",a,b,c,d,e*PSL->internal.x2ix,f*PSL->internal.y2iy);
 				break;
 			case GMT_Y:	/* Constant y. Convert x,z to x',y' */
 				a = -GMT->current.proj.z_project.cos_az;
 				b = -GMT->current.proj.z_project.sin_az * GMT->current.proj.z_project.sin_el;
 				c = 0.0;
 				d = GMT->current.proj.z_project.cos_el;
-				// GMT->current.proj.z_project.x_off=2.734875;
-				// GMT->current.proj.z_project.y_off=2.099742;
-				// FILE* fp=NULL;
-				fp=fopen("tmp_x_off_y_off.txt","r");
-				if(!fp)
-				{
-					printf("读取缓存文件失败\n");
-				}else{
-					// printf("3D view is currently fixed by gzk\n");
-					fscanf(fp,"%lf %lf",&GMT->current.proj.z_project.x_off,&GMT->current.proj.z_project.y_off);
-					fclose(fp);
-				}
 				e = GMT->current.proj.z_project.x_off + level * GMT->current.proj.z_project.sin_az;
 				f = GMT->current.proj.z_project.y_off - level * GMT->current.proj.z_project.cos_az * GMT->current.proj.z_project.sin_el;
-				// printf("XZ平面: xoff: %f   yoff: %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
-				// ============================================
-				// double x,y;
-				// double xx[4], yy[4];
-				
-				// printf("XZ平面: 重新计算之后xoff: %f   yoff: %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
-				
-				// ============================================
-				
-				// printf("XZ平面 a: %f b: %f c: %f d: %f e: %f  f: %f\n",a,b,c,d,e*PSL->internal.x2ix,f*PSL->internal.y2iy);
 				break;
 			case GMT_Z:	/* Constant z. Convert x,y to x',y' */
 				a = -GMT->current.proj.z_project.cos_az;
@@ -7646,27 +7593,12 @@ void gmt_plane_perspective (struct GMT_CTRL *GMT, int plane, double level) {
 				d = -GMT->current.proj.z_project.cos_az * GMT->current.proj.z_project.sin_el;
 				e = GMT->current.proj.z_project.x_off;
 				f = GMT->current.proj.z_project.y_off + level * GMT->current.proj.z_project.cos_el;
-				// printf("XY平面: xoff: %f   yoff: %f\n",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
-				// printf("XY平面  a: %f b: %f c: %f d: %f e: %f  f: %f\n",a,b,c,d,e*PSL->internal.x2ix,f*PSL->internal.y2iy);
-				// FILE* fp=NULL;
-				fp=fopen("tmp_x_off_y_off.txt","w");
-				if(!fp)
-				{
-					printf("打开缓存文件失败\n");
-				}else
-				{
-					fprintf(fp,"%lf %lf",GMT->current.proj.z_project.x_off,GMT->current.proj.z_project.y_off);
-					fclose(fp);
-				}
 				break;
 		}
-		// printf("ix: %f iy: %f\n",PSL->internal.x2ix,PSL->internal.y2iy);
 		/* First restore the old matrix or save the old one when that was not done before */
 		PSL_command (PSL, "%s [%g %g %g %g %g %g] concat\n",
 			(GMT->current.proj.z_project.plane >= 0) ? "PSL_GPP setmatrix" : "/PSL_GPP matrix currentmatrix def",
 			a, b, c, d, e * PSL->internal.x2ix, f * PSL->internal.y2iy);
-		// PSL_command(PSL,"%%测试\n");
-		// PSL_command(PSL,"%% 投影参数 %d\t%f\t%f\n",plane%3,GMT->current.proj.z_project.view_azimuth,GMT->current.proj.z_project.view_elevation);
 	}
 
 	/* Store value of plane */
