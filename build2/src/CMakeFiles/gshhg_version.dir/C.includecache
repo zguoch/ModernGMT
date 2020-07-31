@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/MyData/Research/3-CodeProject/ModernGMT/gmt/src/declspec.h
+
+/MyData/Research/3-CodeProject/ModernGMT/gmt/src/gshhg_version.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+netcdf.h
+-
+gshhg_version.h
+/MyData/Research/3-CodeProject/ModernGMT/gmt/src/gshhg_version.h
+
+/MyData/Research/3-CodeProject/ModernGMT/gmt/src/gshhg_version.h
+gmt_config.h
+/MyData/Research/3-CodeProject/ModernGMT/gmt/src/gmt_config.h
+declspec.h
+/MyData/Research/3-CodeProject/ModernGMT/gmt/src/declspec.h
+
+/usr/local/Cellar/netcdf/4.6.3_1/include/netcdf.h
+stddef.h
+-
+errno.h
+-
+malloc.h
+-
+io.h
+-
+
+src/config.h
+
+src/gmt_config.h
+config.h
+src/config.h
+

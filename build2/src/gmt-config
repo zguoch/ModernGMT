@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+#--------------------------------------------------------------------
+#
+#  Copyright (c) 1991-2018 by P. Wessel, W. H. F. Smith, R. Scharroo, J. Luis and F. Wobbe
+#  See LICENSE.TXT file for copying and redistribution conditions.
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU Lesser General Public License as published by
+#  the Free Software Foundation; version 3 or any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+#
+#  Contact info: gmt.soest.hawaii.edu
+#
+# gmt-config simply reports various paths and settings that are useful
+# to developers that need to include/link GMT5 resources.
+#--------------------------------------------------------------------*/
+#
+GMT_EXEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Use the executable dir to figure out the lib and include dirs
+GMT_TOP=`dirname $GMT_EXEDIR`
+CONFIG_INCLUDEDIR="$GMT_TOP/include/gmt"
+# Check if the configure include directory exist.  If so then we craft
+# the cflags and lib settings off its parent, else stick with config.
+if [ -d $CONFIG_INCLUDEDIR ]; then
+  CONFIG_CFLAGS="-I$CONFIG_INCLUDEDIR"
+  CONFIG_LIBS="-L$GMT_TOP/lib -lgmt"
+else
+  CONFIG_CFLAGS="-I/usr/local/include/gmt"
+  CONFIG_INCLUDEDIR="/usr/local/include/gmt"
+  CONFIG_LIBS="-L/usr/local/lib -lgmt"
+fi
+CONFIG_DATA=$($GMT_EXEDIR/gmt --show-datadir)
+CONFIG_PLUGINDIR=$($GMT_EXEDIR/gmt --show-plugindir)
+CONFIG_DEP_LIBS="/usr/local/Cellar/netcdf/4.6.3_1/lib/libnetcdf.dylib /usr/lib/libcurl.dylib;/usr/local/Cellar/gdal/2.3.1_1/lib/libgdal.dylib;/Users/zguo/.pyenv/versions/anaconda3-5.0.1/lib/libpcre.dylib;/usr/local/lib/libfftw3f.dylib;/usr/local/lib/libfftw3f_threads.dylib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Accelerate.framework;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Accelerate.framework;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Accelerate.framework"
+CONFIG_GSHHG=$($GMT_EXEDIR/gmt gmtget DIR_GSHHG)
+CONFIG_DCW=$($GMT_EXEDIR/gmt gmtget DIR_DCW)
+CONFIG_PREFIX="/usr/local"
+CONFIG_VERSION="6.0.0_c4437e4-dirty"
+
+if [ "TRUE" == "TRUE" ]; then
+  CONFIG_FFTW_ENABLED=yes
+else
+  CONFIG_FFTW_ENABLED=no
+fi
+
+if [ "TRUE" == "TRUE" ]; then
+  CONFIG_GDAL_ENABLED=yes
+else
+  CONFIG_GDAL_ENABLED=no
+fi
+
+if [ "TRUE" == "TRUE" ] || [ "" == "TRUE" ]; then
+  CONFIG_PCRE_ENABLED=yes
+else
+  CONFIG_PCRE_ENABLED=no
+fi
+
+if [ "TRUE" == "TRUE" ]; then
+  CONFIG_LAPACK_ENABLED=yes
+else
+  CONFIG_LAPACK_ENABLED=no
+fi
+
+if [ "" == "enabled" ]; then
+  CONFIG_OPENMP_ENABLED=yes
+else
+  CONFIG_OPENMP_ENABLED=no
+fi
+
+if [ 8 -eq 8 ]; then
+  CONFIG_BITS=64
+else
+  CONFIG_BITS=32
+fi
+
+usage()
+{
+  cat <<EOF
+Usage: gmt-config [OPTIONS]
+
+Available values for OPTIONS include:
+
+  --help        display this help message and exit
+  --bits        whether library is build 32-bit or 64-bit
+  --cflags      pre-processor and compiler flags
+  --datadir     GMT's data directories
+  --dcw         location of used DCW
+  --dep-libs    dependent libraries
+  --gshhg       location of used GSHHG
+  --has-fftw    whether FFTW is used in build
+  --has-gdal    whether GDAL is used in build
+  --has-pcre    whether PCRE is used in build
+  --has-lapack  whether LAPACK is used in build
+  --has-openmp  whether GMT was built with OpenMP support
+  --includedir  include directory
+  --libs        library linking information
+  --plugindir   GMT's plugin directory
+  --prefix      install prefix
+  --version     library version
+EOF
+  exit $1
+}
+
+[ -z "$1" ] && usage 1 1>&2
+
+for arg in "$@"; do
+  case $arg in
+    --bits)
+    echo $CONFIG_BITS
+    ;;
+
+    --cflags)
+    echo $CONFIG_CFLAGS
+    ;;
+
+    --datadir)
+    echo $CONFIG_DATA
+    ;;
+
+    --dcw)
+    echo $CONFIG_DCW
+    ;;
+
+    --dep-libs)
+    echo ${CONFIG_DEP_LIBS//;/ }
+    ;;
+
+    --gshhg)
+    echo $CONFIG_GSHHG
+    ;;
+
+    --has-fftw)
+    echo $CONFIG_FFTW_ENABLED
+    ;;
+
+    --has-gdal)
+    echo $CONFIG_GDAL_ENABLED
+    ;;
+
+    --has-pcre)
+    echo $CONFIG_PCRE_ENABLED
+    ;;
+
+    --has-lapack)
+    echo $CONFIG_LAPACK_ENABLED
+    ;;
+
+    --has-openmp)
+    echo $CONFIG_OPENMP_ENABLED
+    ;;
+
+    --includedir)
+    echo $CONFIG_INCLUDEDIR
+    ;;
+
+    --libs)
+    echo $CONFIG_LIBS
+    ;;
+
+    --plugindir)
+    echo $CONFIG_PLUGINDIR
+    ;;
+
+    --prefix)
+    echo $CONFIG_PREFIX
+    ;;
+
+    --version)
+    echo $CONFIG_VERSION
+    ;;
+
+    *)
+    usage 1 1>&2
+    ;;
+  esac
+done

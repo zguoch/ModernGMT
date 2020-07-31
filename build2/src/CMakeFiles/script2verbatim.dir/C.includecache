@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/MyData/Research/3-CodeProject/ModernGMT/gmt/src/script2verbatim.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+

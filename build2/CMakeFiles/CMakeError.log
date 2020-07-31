@@ -1,0 +1,536 @@
+Determining if the function sgemm_ exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_97d23/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_97d23.dir/build.make CMakeFiles/cmTC_97d23.dir/build
+Building C object CMakeFiles/cmTC_97d23.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=sgemm_ -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_97d23.dir/CheckFunctionExists.c.o   -c /usr/local/Cellar/cmake/3.14.3/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTC_97d23
+/usr/local/Cellar/cmake/3.14.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_97d23.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=sgemm_ -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_97d23.dir/CheckFunctionExists.c.o  -o cmTC_97d23 
+Undefined symbols for architecture x86_64:
+  "_sgemm_", referenced from:
+      _main in CheckFunctionExists.c.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make[1]: *** [cmTC_97d23] Error 1
+make: *** [cmTC_97d23/fast] Error 2
+
+
+Determining if the include file io.h exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_bb8f2/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_bb8f2.dir/build.make CMakeFiles/cmTC_bb8f2.dir/build
+Building C object CMakeFiles/cmTC_bb8f2.dir/CheckIncludeFile.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_bb8f2.dir/CheckIncludeFile.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'io.h' file not found
+#include <io.h>
+         ^~~~~~
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_bb8f2.dir/CheckIncludeFile.c.o] Error 1
+make: *** [cmTC_bb8f2/fast] Error 2
+
+
+Determining if the include file direct.h exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_ed097/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_ed097.dir/build.make CMakeFiles/cmTC_ed097.dir/build
+Building C object CMakeFiles/cmTC_ed097.dir/CheckIncludeFile.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_ed097.dir/CheckIncludeFile.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'direct.h' file not found
+#include <direct.h>
+         ^~~~~~~~~~
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_ed097.dir/CheckIncludeFile.c.o] Error 1
+make: *** [cmTC_ed097/fast] Error 2
+
+
+Determining if the include file process.h exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_36ffa/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_36ffa.dir/build.make CMakeFiles/cmTC_36ffa.dir/build
+Building C object CMakeFiles/cmTC_36ffa.dir/CheckIncludeFile.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_36ffa.dir/CheckIncludeFile.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'process.h' file not found
+#include <process.h>
+         ^~~~~~~~~~~
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_36ffa.dir/CheckIncludeFile.c.o] Error 1
+make: *** [cmTC_36ffa/fast] Error 2
+
+
+Determining if the function fopen64 exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_92aa1/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_92aa1.dir/build.make CMakeFiles/cmTC_92aa1.dir/build
+Building C object CMakeFiles/cmTC_92aa1.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -DCHECK_FUNCTION_EXISTS=fopen64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_92aa1.dir/CheckFunctionExists.c.o   -c /usr/local/Cellar/cmake/3.14.3/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTC_92aa1
+/usr/local/Cellar/cmake/3.14.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_92aa1.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=fopen64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_92aa1.dir/CheckFunctionExists.c.o  -o cmTC_92aa1 
+Undefined symbols for architecture x86_64:
+  "_fopen64", referenced from:
+      _main in CheckFunctionExists.c.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make[1]: *** [cmTC_92aa1] Error 1
+make: *** [cmTC_92aa1/fast] Error 2
+
+
+Performing C SOURCE FILE Test HAVE_QSORT_R_GLIBC failed with the following compile output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_6319b/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_6319b.dir/build.make CMakeFiles/cmTC_6319b.dir/build
+Building C object CMakeFiles/cmTC_6319b.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -DHAVE_QSORT_R_GLIBC -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_6319b.dir/src.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/src.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/src.c:11:39: warning: null passed to a callee that requires a non-null argument [-Wnonnull]
+                qsort_r(array,5,sizeof(int),cmp,NULL);
+                                                ~~~~^
+1 warning generated.
+Linking C executable cmTC_6319b
+/usr/local/Cellar/cmake/3.14.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6319b.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DHAVE_QSORT_R_GLIBC -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_6319b.dir/src.c.o  -o cmTC_6319b 
+
+...and run output:
+Segmentation fault
+Return value: FAILED_TO_RUN
+Source file was:
+
+		#include <stdlib.h>
+		#include <assert.h>
+		int cmp(const void *a, const void*b, void *c) {
+		assert(c == NULL);
+		return *(int*)a - *(int*)b;
+		}
+		int main() {
+		int array[5] = {7,3,5,2,8};
+		int i;
+		qsort_r(array,5,sizeof(int),cmp,NULL);
+		for (i=0;i<4;++i) {
+		assert(array[i] < array[i+1]);
+		}
+		return 0;
+		}
+		
+Determining if the function stricmp exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_bcb09/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_bcb09.dir/build.make CMakeFiles/cmTC_bcb09.dir/build
+Building C object CMakeFiles/cmTC_bcb09.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -DCHECK_FUNCTION_EXISTS=stricmp -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_bcb09.dir/CheckFunctionExists.c.o   -c /usr/local/Cellar/cmake/3.14.3/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTC_bcb09
+/usr/local/Cellar/cmake/3.14.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bcb09.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=stricmp -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_bcb09.dir/CheckFunctionExists.c.o  -o cmTC_bcb09 
+Undefined symbols for architecture x86_64:
+  "_stricmp", referenced from:
+      _main in CheckFunctionExists.c.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make[1]: *** [cmTC_bcb09] Error 1
+make: *** [cmTC_bcb09/fast] Error 2
+
+
+Determining if the function strnicmp exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_d2f41/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_d2f41.dir/build.make CMakeFiles/cmTC_d2f41.dir/build
+Building C object CMakeFiles/cmTC_d2f41.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -DCHECK_FUNCTION_EXISTS=strnicmp -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_d2f41.dir/CheckFunctionExists.c.o   -c /usr/local/Cellar/cmake/3.14.3/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTC_d2f41
+/usr/local/Cellar/cmake/3.14.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d2f41.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=strnicmp -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_d2f41.dir/CheckFunctionExists.c.o  -o cmTC_d2f41 
+Undefined symbols for architecture x86_64:
+  "_strnicmp", referenced from:
+      _main in CheckFunctionExists.c.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make[1]: *** [cmTC_d2f41] Error 1
+make: *** [cmTC_d2f41/fast] Error 2
+
+
+Determining if the function memalign exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_d15da/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_d15da.dir/build.make CMakeFiles/cmTC_d15da.dir/build
+Building C object CMakeFiles/cmTC_d15da.dir/CheckFunctionExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -DCHECK_FUNCTION_EXISTS=memalign -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_d15da.dir/CheckFunctionExists.c.o   -c /usr/local/Cellar/cmake/3.14.3/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTC_d15da
+/usr/local/Cellar/cmake/3.14.3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d15da.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=memalign -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_d15da.dir/CheckFunctionExists.c.o  -o cmTC_d15da 
+Undefined symbols for architecture x86_64:
+  "_memalign", referenced from:
+      _main in CheckFunctionExists.c.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make[1]: *** [cmTC_d15da] Error 1
+make: *** [cmTC_d15da/fast] Error 2
+
+
+Performing C SOURCE FILE Test HAVE_SC_NPROC_ONLN failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_ee807/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_ee807.dir/build.make CMakeFiles/cmTC_ee807.dir/build
+Building C object CMakeFiles/cmTC_ee807.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -DHAVE_SC_NPROC_ONLN -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_ee807.dir/src.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/src.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/src.c:4:14: error: use of undeclared identifier '_SC_NPROC_ONLN'
+                          sysconf(_SC_NPROC_ONLN);
+                                  ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_ee807.dir/src.c.o] Error 1
+make: *** [cmTC_ee807/fast] Error 2
+
+Source file was:
+
+			#include <unistd.h>
+			int main() {
+			  sysconf(_SC_NPROC_ONLN);
+			}
+			
+Determining size of bool failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_b8523/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_b8523.dir/build.make CMakeFiles/cmTC_b8523.dir/build
+Building C object CMakeFiles/cmTC_b8523.dir/SIZEOF_BOOL.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_b8523.dir/SIZEOF_BOOL.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:25:12: error: use of undeclared identifier 'bool'; did you mean '_Bool'?
+  ('0' + ((SIZE / 10000)%10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:25:12: error: reference to overloaded function could not be resolved; did you mean to call it?
+  ('0' + ((SIZE / 10000)%10)),
+           ^~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:21: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                    ^~~~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:26:12: error: use of undeclared identifier 'bool'; did you mean '_Bool'?
+  ('0' + ((SIZE / 1000)%10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:26:12: error: reference to overloaded function could not be resolved; did you mean to call it?
+  ('0' + ((SIZE / 1000)%10)),
+           ^~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:21: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                    ^~~~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:27:12: error: use of undeclared identifier 'bool'; did you mean '_Bool'?
+  ('0' + ((SIZE / 100)%10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:27:12: error: reference to overloaded function could not be resolved; did you mean to call it?
+  ('0' + ((SIZE / 100)%10)),
+           ^~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:21: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                    ^~~~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:28:12: error: use of undeclared identifier 'bool'; did you mean '_Bool'?
+  ('0' + ((SIZE / 10)%10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:28:12: error: reference to overloaded function could not be resolved; did you mean to call it?
+  ('0' + ((SIZE / 10)%10)),
+           ^~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:21: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                    ^~~~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:29:12: error: use of undeclared identifier 'bool'; did you mean '_Bool'?
+  ('0' +  (SIZE    % 10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:29:12: error: reference to overloaded function could not be resolved; did you mean to call it?
+  ('0' +  (SIZE    % 10)),
+           ^~~~
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:23:21: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(bool))
+                    ^~~~~~
+10 errors generated.
+make[1]: *** [CMakeFiles/cmTC_b8523.dir/SIZEOF_BOOL.c.o] Error 1
+make: *** [cmTC_b8523/fast] Error 2
+
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_BOOL.c:
+#include <sys/types.h>
+#include <stdint.h>
+#include <stddef.h>
+
+
+#undef KEY
+#if defined(__i386)
+# define KEY '_','_','i','3','8','6'
+#elif defined(__x86_64)
+# define KEY '_','_','x','8','6','_','6','4'
+#elif defined(__ppc__)
+# define KEY '_','_','p','p','c','_','_'
+#elif defined(__ppc64__)
+# define KEY '_','_','p','p','c','6','4','_','_'
+#elif defined(__aarch64__)
+# define KEY '_','_','a','a','r','c','h','6','4','_','_'
+#elif defined(__ARM_ARCH_7A__)
+# define KEY '_','_','A','R','M','_','A','R','C','H','_','7','A','_','_'
+#elif defined(__ARM_ARCH_7S__)
+# define KEY '_','_','A','R','M','_','A','R','C','H','_','7','S','_','_'
+#endif
+
+#define SIZE (sizeof(bool))
+char info_size[] =  {'I', 'N', 'F', 'O', ':', 's','i','z','e','[',
+  ('0' + ((SIZE / 10000)%10)),
+  ('0' + ((SIZE / 1000)%10)),
+  ('0' + ((SIZE / 100)%10)),
+  ('0' + ((SIZE / 10)%10)),
+  ('0' +  (SIZE    % 10)),
+  ']',
+#ifdef KEY
+  ' ','k','e','y','[', KEY, ']',
+#endif
+  '\0'};
+
+#ifdef __CLASSIC_C__
+int main(argc, argv) int argc; char *argv[];
+#else
+int main(int argc, char *argv[])
+#endif
+{
+  int require = 0;
+  require += info_size[argc];
+  (void)argv;
+  return require;
+}
+
+
+Determining size of greg_t failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_10d4f/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_10d4f.dir/build.make CMakeFiles/cmTC_10d4f.dir/build
+Building C object CMakeFiles/cmTC_10d4f.dir/SIZEOF_GREG_T.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_10d4f.dir/SIZEOF_GREG_T.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:26:12: error: use of undeclared identifier 'greg_t'
+  ('0' + ((SIZE / 10000)%10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:24:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(greg_t))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:27:12: error: use of undeclared identifier 'greg_t'
+  ('0' + ((SIZE / 1000)%10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:24:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(greg_t))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:28:12: error: use of undeclared identifier 'greg_t'
+  ('0' + ((SIZE / 100)%10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:24:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(greg_t))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:29:12: error: use of undeclared identifier 'greg_t'
+  ('0' + ((SIZE / 10)%10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:24:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(greg_t))
+                     ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:30:12: error: use of undeclared identifier 'greg_t'
+  ('0' +  (SIZE    % 10)),
+           ^
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:24:22: note: expanded from macro 'SIZE'
+#define SIZE (sizeof(greg_t))
+                     ^
+5 errors generated.
+make[1]: *** [CMakeFiles/cmTC_10d4f.dir/SIZEOF_GREG_T.c.o] Error 1
+make: *** [cmTC_10d4f/fast] Error 2
+
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CheckTypeSize/SIZEOF_GREG_T.c:
+#include <sys/types.h>
+#include <stdint.h>
+#include <stddef.h>
+#include "sys/ucontext.h"
+
+
+#undef KEY
+#if defined(__i386)
+# define KEY '_','_','i','3','8','6'
+#elif defined(__x86_64)
+# define KEY '_','_','x','8','6','_','6','4'
+#elif defined(__ppc__)
+# define KEY '_','_','p','p','c','_','_'
+#elif defined(__ppc64__)
+# define KEY '_','_','p','p','c','6','4','_','_'
+#elif defined(__aarch64__)
+# define KEY '_','_','a','a','r','c','h','6','4','_','_'
+#elif defined(__ARM_ARCH_7A__)
+# define KEY '_','_','A','R','M','_','A','R','C','H','_','7','A','_','_'
+#elif defined(__ARM_ARCH_7S__)
+# define KEY '_','_','A','R','M','_','A','R','C','H','_','7','S','_','_'
+#endif
+
+#define SIZE (sizeof(greg_t))
+char info_size[] =  {'I', 'N', 'F', 'O', ':', 's','i','z','e','[',
+  ('0' + ((SIZE / 10000)%10)),
+  ('0' + ((SIZE / 1000)%10)),
+  ('0' + ((SIZE / 100)%10)),
+  ('0' + ((SIZE / 10)%10)),
+  ('0' +  (SIZE    % 10)),
+  ']',
+#ifdef KEY
+  ' ','k','e','y','[', KEY, ']',
+#endif
+  '\0'};
+
+#ifdef __CLASSIC_C__
+int main(argc, argv) int argc; char *argv[];
+#else
+int main(int argc, char *argv[])
+#endif
+{
+  int require = 0;
+  require += info_size[argc];
+  (void)argv;
+  return require;
+}
+
+
+Determining if the include file floatingpoint.h exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_cf340/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_cf340.dir/build.make CMakeFiles/cmTC_cf340.dir/build
+Building C object CMakeFiles/cmTC_cf340.dir/CheckIncludeFile.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_cf340.dir/CheckIncludeFile.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'floatingpoint.h' file not found
+#include <floatingpoint.h>
+         ^~~~~~~~~~~~~~~~~
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_cf340.dir/CheckIncludeFile.c.o] Error 1
+make: *** [cmTC_cf340/fast] Error 2
+
+
+Determining if the include file ieeefp.h exists failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_98843/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_98843.dir/build.make CMakeFiles/cmTC_98843.dir/build
+Building C object CMakeFiles/cmTC_98843.dir/CheckIncludeFile.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_98843.dir/CheckIncludeFile.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: 'ieeefp.h' file not found
+#include <ieeefp.h>
+         ^~~~~~~~~~
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_98843.dir/CheckIncludeFile.c.o] Error 1
+make: *** [cmTC_98843/fast] Error 2
+
+
+Determining if the isnand exist failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_bb7e4/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_bb7e4.dir/build.make CMakeFiles/cmTC_bb7e4.dir/build
+Building C object CMakeFiles/cmTC_bb7e4.dir/CheckSymbolExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_bb7e4.dir/CheckSymbolExists.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:9:19: error: use of undeclared identifier 'isnand'
+  return ((int*)(&isnand))[argc];
+                  ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_bb7e4.dir/CheckSymbolExists.c.o] Error 1
+make: *** [cmTC_bb7e4/fast] Error 2
+
+File /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef isnand
+  return ((int*)(&isnand))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the isnanf exist failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_e0df1/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_e0df1.dir/build.make CMakeFiles/cmTC_e0df1.dir/build
+Building C object CMakeFiles/cmTC_e0df1.dir/CheckSymbolExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_e0df1.dir/CheckSymbolExists.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:9:19: error: use of undeclared identifier 'isnanf'; did you mean 'nanf'?
+  return ((int*)(&isnanf))[argc];
+                  ^~~~~~
+                  nanf
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/math.h:515:14: note: 'nanf' declared here
+extern float nanf(const char *);
+             ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_e0df1.dir/CheckSymbolExists.c.o] Error 1
+make: *** [cmTC_e0df1/fast] Error 2
+
+File /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef isnanf
+  return ((int*)(&isnanf))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the sincos exist failed with the following output:
+Change Dir: /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_797dc/fast 
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_797dc.dir/build.make CMakeFiles/cmTC_797dc.dir/build
+Building C object CMakeFiles/cmTC_797dc.dir/CheckSymbolExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D__EXTENSIONS__  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk   -o CMakeFiles/cmTC_797dc.dir/CheckSymbolExists.c.o   -c /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:9:19: error: use of undeclared identifier 'sincos'; did you mean '__sincos'?
+  return ((int*)(&sincos))[argc];
+                  ^~~~~~
+                  __sincos
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/math.h:655:29: note: '__sincos' declared here
+__header_always_inline void __sincos(double __x, double *__sinp, double *__cosp) {
+                            ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_797dc.dir/CheckSymbolExists.c.o] Error 1
+make: *** [cmTC_797dc/fast] Error 2
+
+File /MyData/Research/3-CodeProject/ModernGMT/gmt/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef sincos
+  return ((int*)(&sincos))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

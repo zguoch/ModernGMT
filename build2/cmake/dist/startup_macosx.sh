@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Startup script for GMT.app in MacOSX.
+# Setup environment and start Terminal.
+
+if [ "$1" = "GMT_PROMPT" ]; then
+  _rundir=$(dirname "$0")
+  cd "${_rundir}/.."
+  export BUNDLE_RESOURCES="${PWD}/Resources"
+  cd "${OLDPWD}"
+
+  export PATH="${BUNDLE_RESOURCES}/bin:${PATH}"
+  function gmt () { "${BUNDLE_RESOURCES}/bin/gmt" "$@"; }
+  export -f gmt
+  source "${BUNDLE_RESOURCES}/share/tools/gmt_functions.sh"
+  unset DYLD_LIBRARY_PATH
+  gmt
+  _usershell=$(dscl . -read "/Users/$USER" UserShell)
+  _usershell=${_usershell##* }
+  if [ ${_usershell} = ${_usershell%bash} ]; then
+    # not using bash as default shell
+    echo -e "Warning: your default shell is ${_usershell}.  GMT module commands are only available in BASH.  Change your default shell or make sure ${BUNDLE_RESOURCES}/bin is in your PATH and use ${BUNDLE_RESOURCES}/share/tools/gmt5syntax to convert your old GMT scripts.\n"
+    exec ${_usershell}
+  fi
+  # bash: start interactive shell and source gmt completions
+  _temp_bashrc=$(mktemp -t temp_bashrc)
+  cat << EOF > "${_temp_bashrc}"
+    rm -- "${_temp_bashrc}"
+    test -f ~/.bashrc && source ~/.bashrc
+    source "${BUNDLE_RESOURCES}/share/tools/gmt_completion.bash"
+    unset DYLD_LIBRARY_PATH
+EOF
+  exec /bin/bash --rcfile "${_temp_bashrc}" -i
+fi
+
+# run terminal, set path, and run gmt
+# http://hintsforums.macworld.com/showthread.php?t=68252
+osascript << EOF
+tell application "System Events"
+  if (count (processes whose bundle identifier is "com.apple.Terminal")) is 0 then
+    tell application "Terminal"
+      do script with command "/bin/bash \"${BASH_SOURCE[0]}\" GMT_PROMPT" in window 0
+    end tell
+  else
+    tell application "Terminal"
+      do script with command "/bin/bash \"${BASH_SOURCE[0]}\" GMT_PROMPT"
+    end tell
+  end if
+  tell application "Terminal"
+    activate
+  end tell
+end tell
+EOF
+
+exit 0

@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/MyData/Research/3-CodeProject/ModernGMT/gmt/src/pthreads_example.c
+pthread.h
+-
+stdio.h
+-
+
