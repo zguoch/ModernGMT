@@ -3,6 +3,10 @@
 
 ModernGMT是基于GMT官方开发版进行自定义新功能的私房版本。
 
+# 免编译的Docker镜像
+
+镜像名称：[ModernGMT](https://hub.docker.com/repository/docker/zguo/moderngmt)
+
 ## 安装方法
 
 1. [![安装](https://img.shields.io/badge/源码-编译安装-orange.svg)](install.md)
