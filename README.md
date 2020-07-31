@@ -38,3 +38,8 @@ ModernGMT是基于GMT官方开发版进行自定义新功能的私房版本。
 3. 饼图
 
 4. 读取[Gmsh](http://gmsh.info)的.msh文件绘制mesh
+
+## 交流群
+
+钉钉群组：GMT从入门到进阶
+
